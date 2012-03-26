@@ -1,0 +1,14 @@
+dist-packages_horizon:
+	only contains build-refrences, meaning links to orignal source in the horizon directory
+
+horizon : 
+	Contains developed source. Code that has been developed by Skyhigh-team will be listede her:
+	- horizon/dashboards/syspanel/batch_setup
+	- horizon/dashboards/syspanel/templates/batch_setup
+
+	Files configured:
+	- horizon/dashboards/dashboard.py
+
+openstack-dashboard:
+	Configuration of horizon
+- 
