@@ -1,0 +1,9 @@
+bør kjøres i minst 3 minutter og med flere workers
+husk å sette antall sektorer for cache overflow
+
+sette i gang dynamo på ekstern maskin:
+> dynamo -i 172.30.31.57 -n ubuntu -m 172.30.30.74
+
+/i er Iometer-IP
+/m er lokal Dynamo-IP
+/n er hostnavn/managernavn Dynamo-PC. må bruke riktig maskinnavn?

@@ -1,0 +1,23 @@
+=cluster User System Waiting Idle
+title=Gjennomsnitt over lagringnodes bruk av CPU under last
+ylabel=CPU-bruk i prosent
+=noupperright
+fontsz=8
+legendx=right
+=norotate
+legendy=center
+xlabel=Antall compute-noder
+yformat=%g%%
+max=110
+
+=table
+1 0 20 80 5
+2 5 35 60 5
+4 10 40 50 5
+8 10 20 30 40
+
+=yerrorbars
+1 5 5 5 5 
+2 4 5 5 5
+4 3 5 5 5
+8 5 5 5 5

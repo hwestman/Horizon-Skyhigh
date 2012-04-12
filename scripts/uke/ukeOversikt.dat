@@ -1,0 +1,22 @@
+=cluster Eirik Erik
+title=Oversikt over timer brukt per uke per gruppemedlem
+colors=grey7,grey4
+ylabel=Timer
+fontsz=8
+legendx=right
+=norotate
+=nolegoutline
+legendy=center
+xlabel=Uke
+
+=table
+2 27 26
+3 24 30
+4 28 31.5
+5 24 30
+6 27 34
+7 17 48
+8 19 31
+9 23 25
+10 18 39
+11 34 62
