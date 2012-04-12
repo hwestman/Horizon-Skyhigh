@@ -1,0 +1,12 @@
+{% extends 'syspanel/base.html' %}
+{% load i18n %}
+{% block title %}Add Instance{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Add Instance") %}
+{% endblock page_header %}
+
+{% block syspanel_main %}
+    {% include "syspanel/batch_setup/_add_instance.html" %}
+{% endblock %}
+
