@@ -18,7 +18,7 @@ class CreateBatchLink(tables.LinkAction):
 class BatchOverview(tables.DataTable):
 	
 	batch_name = tables.Column('batch_name', verbose_name=_("Batch"))
-	tenant_count = tables.Column('tenant_count')
+	tenant_count = tables.Column('tenant_count', verbose_name=_("Number of Tenants"))
 	instance_count = tables.Column('instance_count')
 
 	class Meta:
