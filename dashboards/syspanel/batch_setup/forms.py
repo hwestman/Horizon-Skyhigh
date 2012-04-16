@@ -21,7 +21,7 @@ class CreateBatch(forms.SelfHandlingForm):
                             initial=1,
                             help_text=_("Number of tenants to launch."))
 	"""
-	Genereates a random pseudopassword alphanumeric string
+	Generates a random pseudopassword alphanumeric string
 	:param 'length' length of pseudorandom password
 	"""
 	def gen_pass(self, length):
@@ -34,7 +34,7 @@ class CreateBatch(forms.SelfHandlingForm):
 		return pw
 
 	"""
-	Saves the genereated username and password to a separete file
+	Saves the generated username and password to a separate file
 	for each created tenant
 	"""
 	def save_creds_to_file(self, request, batch_name, tenant_name, username, password):
@@ -216,7 +216,7 @@ class AddInstance(forms.SelfHandlingForm):
 
 		image_name = api.glance.image_get_meta(request, self.data['image']).name
 		flavor_name = api.nova.flavor_get(request, self.data['flavor']).name
-		LOG.info("here come the flavor_name %s"%flavor_name)
+		LOG.info("Here comes the flavor_name %s"%flavor_name)
 		list = request.session['cur_instances']
 		list.append(Tmp_Instance(len(list)+1,data['name'], data['image'],image_name,data['flavor'],flavor_name))
 		request.session['cur_instances'] = list
