@@ -52,6 +52,7 @@ class IndexView(tables.MultiTableView):
                     list.append(Batch(self.request,row[0],row[1],tenant_list))
                 gc.collect()
  		return list
+
 	def get_instance_setup_data(self):
 
 		list = []
@@ -63,13 +64,7 @@ class IndexView(tables.MultiTableView):
 		else:
 			self.request.session['cur_instances'] = []
 			LOG.info("placed a new list in session")
-		#f = open('/root/list-test-ye.txt','w')
-		#f.write(tmp_instance_list[0])
-		#f.close()
-
-		
-		#em = Tmp_Instance("yeye","yeye","yeye")
-		#list.append(em)
+			
  		return list
 
 class Batch():

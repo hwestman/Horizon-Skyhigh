@@ -14,6 +14,13 @@ class CreateBatchLink(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:create_batch"
     classes = ("ajax-modal", "btn-edit")
 
+class DeleteFlavor(tables.DeleteAction):
+    data_type_singular = _("Instance")
+    data_type_plural = _("Instances")
+
+    def delete(self, request, obj_id):
+        LOG.info("got back : %s"% obj_id)
+
 
 class BatchOverview(tables.DataTable):
 	
@@ -35,4 +42,5 @@ class InstanceSetup(tables.DataTable):
 		name = "instance_setup"
 		verbose_name = _("Instance Setup")
 		table_actions = (AddInstanceLink,CreateBatchLink)
+		row_actions = (DeleteInstance, )
 
