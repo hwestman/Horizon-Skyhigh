@@ -1,0 +1,17 @@
+{% extends 'syspanel/base.html' %}
+{% load i18n %}
+{% block title %}Batch Setup{% endblock %}
+
+{% block page_header %}
+  {% include "horizon/common/_page_header.html" with title=_("Batch Setup") %}
+{% endblock page_header %}
+{% block syspanel_main %}
+  <div id="batch_overview">
+      {{ batch_overview_table.render }}
+  </div>
+
+  <div id="instance_setup">
+      {{ instance_setup_table.render }}
+  </div>
+
+{% endblock %}
