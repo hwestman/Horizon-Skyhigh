@@ -1,4 +1,0 @@
-
-seekmark med 4 tråder og 1000 seeks per tråd:
-bør kjøres mot en partisjon/disk, ikke fil.
-[root@server mlsorensen]# ./seekmark -t4 -f/dev/md3 -s1000 > resultat.dat

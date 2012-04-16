@@ -1,6 +1,0 @@
-unset key
-set xlabel ""
-set ylabel ""
-set output ""
-set terminal xxx
-plot 'fil' using 0:2:3:xticlabels(1) with yerrorbar

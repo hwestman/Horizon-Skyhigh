@@ -1,7 +1,0 @@
-[belastning]
-rw=${WORK}
-size=${SIZE}
-directory=${DIRECTORY}
-bs=${BS}
-runtime=${RUNS}
-time_based

@@ -1,3 +1,0 @@
-bonnie1.dat 64 56 72
-bonnie2.dat 61.9523809523809 47 75
-bonnie3.dat 57.5 47 68
