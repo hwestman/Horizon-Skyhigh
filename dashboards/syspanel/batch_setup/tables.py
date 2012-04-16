@@ -14,7 +14,7 @@ class CreateBatchLink(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:create_batch"
     classes = ("ajax-modal", "btn-edit")
 
-class DeleteFlavor(tables.DeleteAction):
+class DeleteInstance(tables.DeleteAction):
     data_type_singular = _("Instance")
     data_type_plural = _("Instances")
 
