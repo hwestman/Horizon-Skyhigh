@@ -90,7 +90,6 @@ class Batch():
 
 		for t in self.tenant_list :
 			LOG.info(t)
-			#cursor.execute("SELECT COUNT(*) FROM instances WHERE project_id = '%s' AND vm_state = 'active'"%t)
                         cursor.execute("SELECT COUNT(*) FROM instances WHERE project_id = '%s' AND terminated_at IS NULL AND hostname IS NOT NULL"%t)
 			data = cursor.fetchone()
 			count = data[0]
