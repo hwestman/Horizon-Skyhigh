@@ -21,6 +21,13 @@ class DeleteInstance(tables.DeleteAction):
     def delete(self, request, obj_id):
         LOG.info("got back : %s"% obj_id)
 
+class DeleteBatch(tables.DeleteAction):
+    data_type_singular = _("Batch")
+    data_type_plural = _("Batch")
+
+    def delete(self, request, obj_id):
+        LOG.info("got back in deletebatch : %s"% obj_id)
+
 
 class BatchOverview(tables.DataTable):
 	
@@ -31,6 +38,7 @@ class BatchOverview(tables.DataTable):
 	class Meta:
 		name = "batch_overview"
 		verbose_name = _("Batches")
+		row_actions = (DeleteBatch, )
 
 class InstanceSetup(tables.DataTable):
 
