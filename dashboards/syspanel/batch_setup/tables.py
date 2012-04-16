@@ -23,7 +23,7 @@ class DeleteInstance(tables.DeleteAction):
 
 class DeleteBatch(tables.DeleteAction):
     data_type_singular = _("Batch")
-    data_type_plural = _("Batch")
+    data_type_plural = _("Batches")
 
     def delete(self, request, obj_id):
         LOG.info("got back in deletebatch : %s"% obj_id)
