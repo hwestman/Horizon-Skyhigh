@@ -19,7 +19,7 @@ class BatchOverview(tables.DataTable):
 	
 	batch_name = tables.Column('batch_name', verbose_name=_("Batch"))
 	tenant_count = tables.Column('tenant_count', verbose_name=_("Number of tenants"))
-	instance_count = tables.Column('instance_count')
+	instance_count = tables.Column('instance_count', verbose_name=_("Number of instances"))
 
 	class Meta:
 		name = "batch_overview"
