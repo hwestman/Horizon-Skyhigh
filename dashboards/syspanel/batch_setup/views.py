@@ -68,6 +68,7 @@ class IndexView(tables.MultiTableView):
 
 class Batch():
 	id=""
+        name="i'm a batch object"
 	batch_name =""
 	tenant_list = []
         tenant_count = 0
