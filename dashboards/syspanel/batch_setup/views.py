@@ -68,14 +68,13 @@ class IndexView(tables.MultiTableView):
 
 class Batch():
 	id=""
-        name="i'm a batch object"
-	batch_name =""
+	name =""
 	tenant_list = []
         tenant_count = 0
         instance_count = 0
 	def __init__(self,request,id,batch_name, tenant_list):
 		self.id = id
-		self.batch_name = batch_name
+		self.name = batch_name
 		self.tenant_list = tenant_list
 		self.tenant_count = len(tenant_list)
 		self.instance_count = self.GetInstances(request)
