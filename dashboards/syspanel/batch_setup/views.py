@@ -29,6 +29,7 @@ import pprint, MySQLdb, gc
 import logging
 from horizon import api
 
+from novaclient.v1_1 import batches
 
 LOG = logging.getLogger(__name__)
 
@@ -58,12 +59,10 @@ class IndexView(tables.MultiTableView):
 		list = []
 		if('cur_instances' in self.request.session):
 			tmp_instance_list = self.request.session.get('cur_instances')
-			LOG.info("tmp_instance_list is set: ")
 			list=tmp_instance_list
 
 		else:
 			self.request.session['cur_instances'] = []
-			LOG.info("placed a new list in session")
 			
  		return list
 
@@ -84,7 +83,6 @@ class Batch():
 		cursor = db.cursor()
 
 		for t in self.tenant_list :
-			LOG.info(t)
                         cursor.execute("SELECT COUNT(*) FROM instances WHERE project_id = '%s' AND terminated_at IS NULL AND hostname IS NOT NULL"%t)
 			data = cursor.fetchone()
 			count = data[0]
