@@ -50,7 +50,7 @@ class IndexView(tables.MultiTableView):
                     tid = cursor.fetchall()
                     for line in tid :
                         tenant_list.append(line[0])
-                    list.append(Batch(self.request,row[0],row[1],tenant_list))
+                    list.append(Batch(self.request,int(row[0]),row[1],tenant_list))
                 gc.collect()
  		return list
 
