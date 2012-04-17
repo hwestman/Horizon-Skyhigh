@@ -67,7 +67,7 @@ class IndexView(tables.MultiTableView):
  		return list
 
 class Batch():
-	id
+	id=0
 	batch_name =""
 	tenant_list = []
         tenant_count = 0
