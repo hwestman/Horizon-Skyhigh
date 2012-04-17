@@ -29,7 +29,7 @@ import pprint, MySQLdb, gc
 import logging
 from horizon import api
 
-from novaclient.v1_1 import batches
+
 
 LOG = logging.getLogger(__name__)
 
