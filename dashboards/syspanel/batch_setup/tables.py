@@ -1,5 +1,7 @@
 from horizon import api
 from horizon import tables
+import logging
+LOG=logging.getLogger(__name__)
 
 
 class AddInstanceLink(tables.LinkAction):
