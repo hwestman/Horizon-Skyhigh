@@ -1,5 +1,6 @@
 from horizon import api
 from horizon import tables
+import MySQLdb
 import logging
 LOG=logging.getLogger(__name__)
 
