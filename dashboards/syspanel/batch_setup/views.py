@@ -106,6 +106,7 @@ class EditBatchView(tables.DataTableView):
 
 class Tenant():
 	id
+	name = "kaare"
 	def __init__(self,id):
 		self.id = id
 	
