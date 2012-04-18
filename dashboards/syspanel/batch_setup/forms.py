@@ -218,7 +218,7 @@ class AddInstance(forms.SelfHandlingForm):
 		flavor_name = api.nova.flavor_get(request, self.data['flavor']).name
 		LOG.info("Here comes the flavor_name %s"%flavor_name)
 		list = request.session['cur_instances']
-		list.append(str(Tmp_Instance(len(list)+1),data['name'], data['image'],image_name,data['flavor'],flavor_name))
+		list.append(Tmp_Instance(str(len(list)+1),data['name'], data['image'],image_name,data['flavor'],flavor_name))
 		request.session['cur_instances'] = list
 
 

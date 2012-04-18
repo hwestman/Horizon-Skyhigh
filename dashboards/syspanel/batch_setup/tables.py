@@ -22,7 +22,13 @@ class DeleteInstance(tables.DeleteAction):
     data_type_plural = _("Instances")
 
     def delete(self, request, obj_id):
-        LOG.info("got back : %s"% obj_id)
+		list = request.session['cur_instances']
+
+		for i in list:
+			if(i.id == obj_id):
+				list.remove(i)
+
+		request.session['cur_instances'] = list
 
 class DeleteBatch(tables.DeleteAction):
     data_type_singular = _("Batch")
@@ -81,6 +87,6 @@ class InstanceSetup(tables.DataTable):
 	class Meta:
 		name = "instance_setup"
 		verbose_name = _("Instance Setup")
-		table_actions = (AddInstanceLink,CreateBatchLink)
+		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance)
 		row_actions = (DeleteInstance, )
 
