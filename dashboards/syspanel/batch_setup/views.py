@@ -23,7 +23,7 @@ from django.http import HttpResponse
 from horizon.dashboards.syspanel.images.tables import AdminImagesTable
 from horizon import api
 from .tables import BatchOverview, InstanceSetup, TenantOverview
-from .forms import CreateBatch, AddInstance, Tmp_Instancem, EditBatch
+from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch
 from horizon import forms
 import pprint, MySQLdb, gc
 import logging
