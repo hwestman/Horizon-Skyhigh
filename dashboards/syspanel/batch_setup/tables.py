@@ -18,10 +18,12 @@ class CreateBatchLink(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:create_batch"
     classes = ("ajax-modal", "btn-create")
 
-class EditBatchLink(tables.LinkAction):
-    name = "edit_batch"
-    verbose_name = _("Edit Batch")
-    url = "horizon:syspanel:batch_setup:edit_batch"
+
+
+class BlaBla(tables.LinkAction):
+    name = "asd"
+    verbose_name = _("asd")
+    url = "horizon:syspanel:batch_setup:weee"
     classes = ("ajax-modal", "btn-edit")
 
 class DeleteInstance(tables.DeleteAction):
