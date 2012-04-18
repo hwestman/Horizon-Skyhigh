@@ -98,6 +98,16 @@ class EditBatchView(tables.DataTableView):
 	table_class = TenantOverview
 	template_name = 'syspanel/batch_setup/edit_batch.html'
 
+	def get_data(self):
+        
+			tenant = [Tenant(1)]
+
+        return tenants
+
+class Tenant():
+	id
+	def __init__(self,id):
+		self.id = id
 	
 class AddInstanceView(forms.ModalFormView):
 	form_class = AddInstance
