@@ -104,13 +104,19 @@ class EditBatchView(tables.DataTableView):
 
 		return tenants
 
-	def handle_form(self):
+	#def handle_form(self):
 
-		return "kari"
+		#tenant_id = self.request.user.tenant_id
+		#security_groups = [(group.id, group.name)
+		#					for group in api.security_group_list(self.request)]
 
+		#initial = {'tenant_id': tenant_id,
+		#		   'security_group_id': self.kwargs['security_group_id'],
+		#		   'security_group_list': security_groups}
+		#return AddRule.maybe_handle(self.request, initial=initial)
 	def get(self, request, *args, **kwargs):
 		# Form handling
-		form, handled = self.handle_form()
+		#form, handled = self.handle_form()
 		#if handled:
 		#    return handled
 		# Table action handling
@@ -119,14 +125,14 @@ class EditBatchView(tables.DataTableView):
 		#    return handled
 		#if not self.object:
 		#    return shortcuts.redirect("horizon:nova:access_and_security:index")
-		context = self.get_context_data(**kwargs)
-		context['form'] = form
+		#context = self.get_context_data(**kwargs)
+		#context['form'] = form
 		#context['edit_batch'] = self.object
 		if request.is_ajax():
 			#context['hide'] = True
 			self.template_name = ('syspanel/batch_setup'
 								 '/_edit_batch.html')
-		return self.render_to_response(context)
+		return self.render_to_response("context")
 
 class Tenant():
 	id = ""
