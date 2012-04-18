@@ -45,16 +45,16 @@ class DeleteBatch(tables.DeleteAction):
                     if inst.tenant_id == tenant[0]:					# Find those instances that belong to the project
                         LOG.info("Will delete instance %s" % inst.id)	
 			#api.nova.server_delete(request, inst.id)	# Delete them
-			users = api.keystone.user_list(request, tenant_id=tenant)	# Fetch all users in the project
+			users = api.keystone.user_list(request, tenant_id=tenant[0])	# Fetch all users in the project
 			for user in users:											
-                            LOG.info("will remove %s from %s" % (user.name, tenant) )				
+                            LOG.info("will remove %s from %s" % (user.name, tenant[0]) )				
 				#api.keystone.remove_tenant_user(request, tenant, user.id)	# Remove their roles in the project
                             if not user.name == "admin":							# Delete all users but admin
                                 LOG.info("Deleting user %s" % user.name)					
                                 #api.keystone.user_delete(request, user.id)
-			# Scrub project
-			LOG.info("Deleting tenant %s" % tenant)			
-			#api.keystone.tenant_delete(request, tenant)	# Delete tenant
+		# Scrub project
+		LOG.info("Deleting tenant %s" % tenant)			
+		#api.keystone.tenant_delete(request, tenant)	# Delete tenant
         else:
             LOG.info("no instances..!")
                                 
