@@ -19,7 +19,7 @@
 #    under the License.
 
 from django.conf.urls.defaults import patterns, url
-from .views import IndexView, CreateBatchView, AddInstanceView
+from .views import IndexView, CreateBatchView, AddInstanceView, EditBatchView
 
 urlpatterns = patterns('horizon.dashboards.syspanel.batch_setup.views',
     url(r'^$', IndexView.as_view(), name='index'),
