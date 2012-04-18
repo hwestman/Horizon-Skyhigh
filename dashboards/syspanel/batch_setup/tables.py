@@ -22,7 +22,7 @@ class EditBatchLink(tables.LinkAction):
     name = "edit_batch"
     verbose_name = _("Edit Batch")
     url = "horizon:syspanel:batch_setup:edit_batch"
-    classes = ("ajax-modal", "btn-edit")
+    classes = ("btn-edit",)
 
 class DeleteInstance(tables.DeleteAction):
     data_type_singular = _("Instance")
