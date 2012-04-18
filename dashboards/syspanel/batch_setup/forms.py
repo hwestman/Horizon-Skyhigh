@@ -227,6 +227,20 @@ class AddInstance(forms.SelfHandlingForm):
 		messages.success(request, msg)
 		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
 
+class EditBatch(forms.SelfHandlingForm):
+	name = forms.CharField(max_length=80, label=_("blabla"))
+
+	#def __init__(self, *args, **kwargs):
+
+
+	def handle(self, request, data):
+
+
+		msg = _('%s was successfully added to instances.'% data['name'])
+		LOG.info(msg)
+		messages.success(request, msg)
+		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
+
 class Tmp_Instance():
 	id = ""
 	name=""
