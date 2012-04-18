@@ -45,28 +45,29 @@ class DeleteBatch(tables.DeleteAction):
 	except:
             LOG.info("Unable to retrive instance list")
 
-	if instances:
-            for tenant in tenants:									# For every project
-                for inst in instances:								# Search every single instance
-                    if inst.tenant_id == tenant[0]:					# Find those instances that belong to the project
+	
+        for tenant in tenants:				# For every project
+            if instances:                               # If there is instnces in the tenant
+                for inst in instances:			# Search every single instance
+                    if inst.tenant_id == tenant[0]:	# Find those instances that belong to the project
                         LOG.info("Will delete instance %s" % inst.id)	
-			api.nova.server_delete(request, inst.id)	# Delete them
-		users = api.keystone.user_list(request, tenant_id=tenant[0])	# Fetch all users in the project
-                for user in users:											
-                    LOG.info("will remove %s from %s" % (user.name, tenant[0]) )				
-                    api.keystone.remove_tenant_user(request, tenant[0], user.id)	# Remove their roles in the project
-                    if not user.name == "admin":							# Delete all users but admin
-                        LOG.info("Deleting user %s" % user.name)					
-                        api.keystone.user_delete(request, user.id)
-                # Scrub project
-                LOG.info("Deleting tenant %s" % tenant[0])			
-                api.keystone.tenant_delete(request, tenant[0])	# Delete tenant
-            cursor.execute("DELETE FROM batch WHERE id='%s'" % obj_id)
-            db.commit()
-            cursor.close()
-            
-        else:
-            LOG.info("no instances..!")
+                        api.nova.server_delete(request, inst.id)                # Delete them
+            else:
+                LOG.info("No instances, will delete the other stuff")
+                        
+            users = api.keystone.user_list(request, tenant_id=tenant[0])	# Fetch all users in the project
+            for user in users:								
+                LOG.info("will remove %s from %s" % (user.name, tenant[0]) )	
+                api.keystone.remove_tenant_user(request, tenant[0], user.id)	# Remove their roles in the project
+                if not user.name == "admin":					# Delete all users but admin
+                    LOG.info("Deleting user %s" % user.name)					
+                    api.keystone.user_delete(request, user.id)
+            # Scrub project
+            LOG.info("Deleting tenant %s" % tenant[0])			
+            api.keystone.tenant_delete(request, tenant[0])	# Delete tenant
+        cursor.execute("DELETE FROM batch WHERE id='%s'" % obj_id)
+        db.commit()
+        cursor.close()
                                 
 
 
