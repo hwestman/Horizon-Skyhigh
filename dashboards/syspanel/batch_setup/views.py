@@ -94,6 +94,10 @@ class CreateBatchView(forms.ModalFormView):
 	form_class = CreateBatch
 	template_name = 'syspanel/batch_setup/create_batch.html'
 
+class EditBatchView(forms.ModalFormView):
+	form_class = CreateBatch
+	template_name = 'syspanel/batch_setup/create_batch.html'
+
 	
 class AddInstanceView(forms.ModalFormView):
 	form_class = AddInstance
