@@ -35,7 +35,7 @@ class DeleteBatch(tables.DeleteAction):
         tenants = cursor.fetchall()
         instances = []
 	try:
-            instances = api.nova.server_list(self.request, all_tenants=True)
+            instances = api.nova.server_list(request, all_tenants=True)
 	except:
             LOG.info("Unable to retrive instance list")
 
