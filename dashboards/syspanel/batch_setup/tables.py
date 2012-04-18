@@ -2,6 +2,7 @@ from horizon import api
 from horizon import tables
 import MySQLdb
 import logging
+import os
 LOG=logging.getLogger(__name__)
 
 
@@ -68,7 +69,7 @@ class DeleteBatch(tables.DeleteAction):
                 if not user.name == "admin":					# Delete all users but admin
                     LOG.info("Deleting user %s" % user.name)					
                     api.keystone.user_delete(request, user.id)
-            # Scrub project
+            os.system("/usr/bin/nova-manage project scrub %s" % tenant[0])  # Scrub project
             LOG.info("Deleting tenant %s" % tenant[0])			
             api.keystone.tenant_delete(request, tenant[0])	# Delete tenant
         cursor.execute("DELETE FROM batch WHERE id='%s'" % obj_id)
