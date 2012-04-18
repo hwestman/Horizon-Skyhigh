@@ -110,7 +110,7 @@ class EditBatchView(tables.DataTableView):
 
 	def get(self, request, *args, **kwargs):
 		# Form handling
-		#form, handled = self.handle_form()
+		form, handled = self.handle_form()
 		#if handled:
 		#    return handled
 		# Table action handling
@@ -121,9 +121,9 @@ class EditBatchView(tables.DataTableView):
 		#    return shortcuts.redirect("horizon:nova:access_and_security:index")
 		context = self.get_context_data(**kwargs)
 		context['form'] = form
-		context['edit_batch'] = self.object
+		#context['edit_batch'] = self.object
 		if request.is_ajax():
-			context['hide'] = True
+			#context['hide'] = True
 			self.template_name = ('syspanel/batch_setup'
 								 '/_edit_batch.html')
 		return self.render_to_response(context)
