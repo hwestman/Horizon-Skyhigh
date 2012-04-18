@@ -105,10 +105,10 @@ class EditBatchView(tables.DataTableView):
 		return tenants
 
 class Tenant():
-	id
+	id = ""
 	name = "kaare"
 	def __init__(self,id):
-		self.id = id
+		self.id = str(id)
 	
 class AddInstanceView(forms.ModalFormView):
 	form_class = AddInstance
