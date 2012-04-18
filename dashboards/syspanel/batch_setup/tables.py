@@ -24,12 +24,6 @@ class EditBatchLink(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:edit_batch"
     classes = ("ajax-modal", "btn-edit")
 
-class BlaBla(tables.LinkAction):
-    name = "asd"
-    verbose_name = _("asd")
-    url = "horizon:syspanel:batch_setup:weee"
-    classes = ("ajax-modal", "btn-edit")
-
 class DeleteInstance(tables.DeleteAction):
     data_type_singular = _("Instance")
     data_type_plural = _("Instances")
@@ -94,7 +88,7 @@ class BatchOverview(tables.DataTable):
 		name = "batch_overview"
 		verbose_name = _("Batches")
 		table_actions = (DeleteBatch, )
-		row_actions = (DeleteBatch,BlaBla, )
+		row_actions = (DeleteBatch,EditBatchLink, )
 
 class InstanceSetup(tables.DataTable):
 
