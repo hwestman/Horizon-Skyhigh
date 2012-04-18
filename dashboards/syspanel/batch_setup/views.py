@@ -100,9 +100,9 @@ class EditBatchView(tables.DataTableView):
 
 	def get_data(self):
         
-		tenant = [Tenant(1)]
+		tenants = [Tenant(1)]
 
-        return tenants
+		return tenants
 
 class Tenant():
 	id
