@@ -108,25 +108,25 @@ class EditBatchView(tables.DataTableView):
 
 		return "kari"
 
-    def get(self, request, *args, **kwargs):
-        # Form handling
-        #form, handled = self.handle_form()
-        #if handled:
-        #    return handled
-        # Table action handling
-        #handled = self.construct_tables()
-        #if handled:
-        #    return handled
-        #if not self.object:
-        #    return shortcuts.redirect("horizon:nova:access_and_security:index")
-        context = self.get_context_data(**kwargs)
-        context['form'] = form
-        context['edit_batch'] = self.object
-        if request.is_ajax():
-            context['hide'] = True
-            self.template_name = ('syspanel/batch_setup'
-                                 '/_edit_batch.html')
-        return self.render_to_response(context)
+	def get(self, request, *args, **kwargs):
+		# Form handling
+		#form, handled = self.handle_form()
+		#if handled:
+		#    return handled
+		# Table action handling
+		#handled = self.construct_tables()
+		#if handled:
+		#    return handled
+		#if not self.object:
+		#    return shortcuts.redirect("horizon:nova:access_and_security:index")
+		context = self.get_context_data(**kwargs)
+		context['form'] = form
+		context['edit_batch'] = self.object
+		if request.is_ajax():
+			context['hide'] = True
+			self.template_name = ('syspanel/batch_setup'
+								 '/_edit_batch.html')
+		return self.render_to_response(context)
 
 class Tenant():
 	id = ""
