@@ -101,3 +101,9 @@ class InstanceSetup(tables.DataTable):
 		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance)
 		row_actions = (DeleteInstance,)
 
+class TenantOverview(tables.DataTable):
+	tenant_name = tables.Column('name', verbose_name=_("Tenant"))
+
+	class Meta:
+		name = "tenant_overview"
+		verbose_name = _("Tenants")

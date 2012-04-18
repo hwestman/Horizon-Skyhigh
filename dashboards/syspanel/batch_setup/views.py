@@ -22,7 +22,7 @@ from horizon import tables
 from django.http import HttpResponse
 from horizon.dashboards.syspanel.images.tables import AdminImagesTable
 from horizon import api
-from .tables import BatchOverview, InstanceSetup
+from .tables import BatchOverview, InstanceSetup, TenantOverview
 from .forms import CreateBatch, AddInstance, Tmp_Instance
 from horizon import forms
 import pprint, MySQLdb, gc
@@ -94,9 +94,9 @@ class CreateBatchView(forms.ModalFormView):
 	form_class = CreateBatch
 	template_name = 'syspanel/batch_setup/create_batch.html'
 
-class EditBatchView(forms.ModalFormView):
-	form_class = CreateBatch
-	template_name = 'syspanel/batch_setup/create_batch.html'
+class EditBatchView(tables.DataTableView):
+	table_class = TenantOverview
+	template_name = 'syspanel/batch_setup/edit_batch.html'
 
 	
 class AddInstanceView(forms.ModalFormView):
