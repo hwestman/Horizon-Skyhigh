@@ -96,7 +96,7 @@ class CreateBatchView(forms.ModalFormView):
 
 class EditBatchView(tables.DataTableView):
 	table_class = TenantOverview
-	template_name = 'syspanel/batch_setup/edit_batch.html'
+	template_name = 'syspanel/batch_setup/_edit_batch.html'
 
 	def get_data(self):
         
