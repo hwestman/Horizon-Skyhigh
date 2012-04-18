@@ -88,5 +88,5 @@ class InstanceSetup(tables.DataTable):
 		name = "instance_setup"
 		verbose_name = _("Instance Setup")
 		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance)
-		row_actions = (DeleteInstance, )
+		row_actions = (DeleteInstance,AddInstanceLink,)
 
