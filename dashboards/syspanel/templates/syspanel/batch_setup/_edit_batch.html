@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block form_id %}add_instance_form{% endblock %}
-{% block form_action %}{% url horizon:syspanel:batch_setup:edit_batch %}{% endblock %}
+{% block form_action %}{% url horizon:syspanel:batch_setup:edit_batch batch.id %}{% endblock %}
 
 {% block modal_id %}edit_batch_modal{% endblock %}
 {% block modal-header %}{% trans "Edit batch" %}{% endblock %}
