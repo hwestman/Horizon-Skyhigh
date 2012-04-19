@@ -116,6 +116,23 @@ class CreateBatchView(forms.ModalFormView):
 class EditBatchView(forms.ModalFormView):
 	form_class = EditBatch
 	template_name = 'syspanel/batch_setup/edit_batch.html'
+
+	def get_object(self, *args, **kwargs):
+
+		list = []
+
+		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+		cursor = db.cursor()
+
+		cursor.execute("SELECT * FROM batch where id = %s"%kwargs["batch_id"])
+		data = cursor.fetchall()
+
+		cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%data[0])
+        tenants = cursor.fetchall()
+                    for line in tenants :
+                        list.append(line[0])
+ 		return list
+		
 """
 class EditBatchView(tables.DataTableView):
 	table_class = TenantOverview
