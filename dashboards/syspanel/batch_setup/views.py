@@ -101,7 +101,7 @@ class CreateBatchView(forms.ModalFormView):
                     usage_list = api.nova.usage_list(self.request, datetime(1970,1,1), datetime.today())
                     total_vcpus=0
                     for usage in usage_list:
-                        total_vcpus += usage.vcpus()
+                        total_vcpus += usage.vcpus
                     context['cpu_total'] = total_vcpus
                                 
 		except:
