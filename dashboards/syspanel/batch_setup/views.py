@@ -132,6 +132,7 @@ class EditBatchView(forms.ModalFormView):
 		tenants = cursor.fetchall()
 		list = []
 		for line in tenants :
+			LOG.info("tenants is: %s"%str(line[0]))
 			list.append(line[0])
 
 		return list
