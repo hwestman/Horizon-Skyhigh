@@ -235,7 +235,6 @@ class EditBatch(forms.SelfHandlingForm):
 
 	def handle(self, request, data):
 
-
 		msg = _('%s was successfully added to instances.'% data['name'])
 		LOG.info(msg)
 		messages.success(request, msg)

@@ -119,8 +119,6 @@ class EditBatchView(forms.ModalFormView):
 
 	def get_object(self, *args, **kwargs):
 
-		
-
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
 		cursor = db.cursor()
 
