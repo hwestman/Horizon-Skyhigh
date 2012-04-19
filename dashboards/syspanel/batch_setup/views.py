@@ -129,8 +129,8 @@ class EditBatchView(forms.ModalFormView):
 
 		cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%data[0])
         tenants = cursor.fetchall()
-                    for line in tenants :
-                        list.append(line[0])
+			for line in tenants :
+				list.append(line[0])
  		return list
 		
 """
