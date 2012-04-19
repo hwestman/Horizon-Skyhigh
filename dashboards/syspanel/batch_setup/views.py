@@ -105,7 +105,7 @@ class CreateBatchView(forms.ModalFormView):
                     context['cpu_total'] = total_vcpus
                                 
 		except:
-			exceptions.handle(self.request)
+			LOG.info("Couldn't get context data from CreateBatchView")
 		return context 
 
 
