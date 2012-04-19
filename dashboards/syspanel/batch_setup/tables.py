@@ -87,7 +87,7 @@ class BatchOverview(tables.DataTable):
 	class Meta:
 		name = "batch_overview"
 		verbose_name = _("Batches")
-		table_actions = (DeleteBatch, )
+		table_actions = (DeleteBatch,EditBatchLink, )
 		row_actions = (EditBatchLink,DeleteBatch, )
 
 class InstanceSetup(tables.DataTable):
