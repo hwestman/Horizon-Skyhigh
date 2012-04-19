@@ -119,7 +119,7 @@ class EditBatchView(forms.ModalFormView):
 
 	def get_initial(self):
 		
-        return {'batch_id': self.kwargs['batch_id']}
+		return {'batch_id': self.kwargs['batch_id']}
 
 	def get_object(self, *args, **kwargs):
 
