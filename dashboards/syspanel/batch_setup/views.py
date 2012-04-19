@@ -119,7 +119,7 @@ class EditBatchView(forms.ModalFormView):
 
 	def get_object(self, *args, **kwargs):
 
-		list = []
+		
 
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
 		cursor = db.cursor()
@@ -128,10 +128,13 @@ class EditBatchView(forms.ModalFormView):
 		data = cursor.fetchall()
 
 		cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%data[0])
-        tenants = cursor.fetchall()
-			for line in tenants :
-				list.append(line[0])
- 		return list
+
+		tenants = cursor.fetchall()
+		list = []
+		for line in tenants :
+			list.append(line[0])
+
+		return list
 		
 """
 class EditBatchView(tables.DataTableView):
