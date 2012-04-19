@@ -2,20 +2,22 @@
 {% load i18n %}
 
 {% block form_id %}edit_batch_form{% endblock %}
-{% block form_action %}{% url horizon:syspanel:batch_setup:edit_batch %}{% endblock %}
+{% block form_action %}{% url horizon:syspanel:batch_setup:edit_batch batch.id %}{% endblock %}
 
-{% block modal_id %}edit_batch_modal{% endblock %}
-{% block modal-header %}{% trans "Edit batch" %}{% endblock %}
+{% block modal-header %}{% trans "Edit Batch" %}{% endblock %}
 
 {% block modal-body %}
-
-	<h3>{% trans "Edit Batch" %}</h3>
+<div class="left">
     <fieldset>
     {% include "horizon/common/_form_fields.html" %}
     </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Select from dropdown and remove" %}:</h3>
+</div>
 {% endblock %}
 
 {% block modal-footer %}
-  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Edit Batch" %}" />
+    <input class="btn btn-primary pull-right" type="submit" value="{% trans "Edit batch" %}" />
   <a href="{% url horizon:syspanel:batch_setup:index %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
 {% endblock %}
