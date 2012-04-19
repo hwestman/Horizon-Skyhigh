@@ -117,6 +117,10 @@ class EditBatchView(forms.ModalFormView):
 	form_class = EditBatch
 	template_name = 'syspanel/batch_setup/edit_batch.html'
 
+	def get_initial(self):
+		
+        return {'batch_id': self.kwargs['batch_id']}
+
 	def get_object(self, *args, **kwargs):
 
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
