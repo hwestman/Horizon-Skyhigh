@@ -21,7 +21,7 @@ class CreateBatch(forms.SelfHandlingForm):
                             initial=1,
                             help_text=_("Number of tenants to launch."))
 	"""
-	Generates a random pseudopassword alphanumeric string
+	Generates a pseudorandom password alphanumeric string
 	:param 'length' length of pseudorandom password
 	"""
 	def gen_pass(self, length):
