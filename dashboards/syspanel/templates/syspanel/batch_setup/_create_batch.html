@@ -8,11 +8,12 @@
 {% block modal-header %}{% trans "Create Batch" %}{% endblock %}
 
 {% block modal-body %}
-
-<h3>{% trans "Add Instances" %}</h3>
-<fieldset>
-    {% include "horizon/common/_form_fields.html" %}
-</fieldset>
+<div class="left">
+    <h3>{% trans "Add Instances" %}</h3>
+    <fieldset>
+        {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
 <div class="right">
     <h3>Current usage</h3>
 </div>
