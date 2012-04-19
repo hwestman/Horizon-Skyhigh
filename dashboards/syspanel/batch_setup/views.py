@@ -27,7 +27,7 @@ from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch
 from horizon import forms
 import pprint, MySQLdb, gc
 import logging
-from horizon import api
+from horizon import api, exceptions
 from datetime import datetime
 
 
@@ -105,7 +105,7 @@ class CreateBatchView(forms.ModalFormView):
                     context['cpu_total'] = total_vcpus
                                 
 		except:
-			LOG.info("Couldn't get context data from CreateBatchView")
+                        exceptions.handle(self.request)
 		return context 
 
 
