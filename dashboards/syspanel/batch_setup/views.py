@@ -28,6 +28,7 @@ from horizon import forms
 import pprint, MySQLdb, gc
 import logging
 from horizon import api
+from datetime import datetime
 
 
 
@@ -93,6 +94,20 @@ class Batch():
 class CreateBatchView(forms.ModalFormView):
 	form_class = CreateBatch
 	template_name = 'syspanel/batch_setup/create_batch.html'
+        
+        def get_context_data(self, **kwargs):
+		context = super(CreateBatchView, self).get_context_data(**kwargs)
+		try:
+                    usage_list = api.nova.usage_list(self.request, datetime(1970,1,1), datetime.today())
+                    total_vcpus=0
+                    for usage in usage_list:
+                        total_vcpus += usage.vcpus()
+                    context['cpu_total'] = total_vcpus
+                                
+		except:
+			exceptions.handle(self.request)
+		return context 
+
 
 class EditBatchView(forms.ModalFormView):
 	form_class = EditBatch
