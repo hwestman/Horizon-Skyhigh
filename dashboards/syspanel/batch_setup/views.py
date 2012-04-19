@@ -99,10 +99,11 @@ class CreateBatchView(forms.ModalFormView):
 		context = super(CreateBatchView, self).get_context_data(**kwargs)
 		try:
                     usage_list = api.nova.usage_list(self.request, datetime(1970,1,1), datetime.today())
-                    total_vcpus=0
+                    totals = {}
                     for usage in usage_list:
-                        total_vcpus += usage.vcpus
-                    context['cpu_total'] = total_vcpus
+                        totals['vcpus'] += usage.vcpus
+                        totals['ram'] += usage.memory_mb
+                    context['totals'] = totals
                                 
 		except:
                         exceptions.handle(self.request)

@@ -16,7 +16,13 @@
 </div>
 <div class="right">
     <h3>{% trans "Current usage" %}</h3>
-    <p>{% trans "This is easy" %} <span> {{ cpu_total }} </span></p>
+    <p>
+        {% trans "You currently have " %} 
+        <strong><span> {{ totals.vcpus }} </span></strong>
+        {% trans "active VCPUs in your entire cloud." %}
+        {% trans "Plea
+        
+     
 </div>
 {% endblock %}
 
