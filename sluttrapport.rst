@@ -106,9 +106,7 @@ Forord
 
 Oppdragsgiver er Erik Hjelmås, førsteamenuensis ved Høgskolen i Gjøvik. Erik underviser i Operativsystemer og Systemadministrasjon, hvor han benytter virtuelle maskiner i undervisningen.
 
-Her kan vi skrive litt mer, vet ikke helt hva vi skal skrive om, men vi må hvertfall ha litt tekst her.
-
-Takk til #openstack (uksysadmin, mjfork, kiall (OpenStack utviklere)) for support over IRC.
+Takk til uksysadmin, mjfork, kiall (OpenStack utviklere), samt resten av de hjelpsomme sjelene på #openstack for support over IRC. Deres kunnskap og hjelpsomhet har bidratt i stor grad til å drive prosjektet fremover.
 
 *Underskrift fra alle gruppemedlemmer, samt sted og dato.*
 
@@ -182,7 +180,7 @@ Skal ikke inneholde noe om det som er gjort i oppgaven og oppnådde resultater`
 
 Nettskyer har fått mye oppmerksomhet de siste årene, og er en teknologi som gjør det mulig for sluttbrukere å kjøre virtuelle maskiner på andres maskinvare og infrastruktur. Dette åpner for muligheter for dynamisk skalering av ressurser, fleksibilitet og økonomiske besparelser.
 
-Slike skyer kan man dra nytte av i undervisning hvor man da kan bruke disse til forskning eller som lab til studenter. I emnene Ethical Hacking And Penetration Testing, Systemadministrasjon og Database- og applikasjonsdrift har virtuelle maskiner vært brukt en stund, hvor elevene får utdelt ett sett med virtuelle maskiner som man da kan kjøre tester og gjøre oppgaver på.
+Slike skyer kan man dra nytte av i undervisning hvor man da kan bruke disse til forskning eller som lab til studenter. I emnene Ethical Hacking And Penetration Testing, Systemadministrasjon og Database- og applikasjonsdrift har virtuelle maskiner vært brukt en stund, hvor elevene får utdelt ett sett med virtuelle maskiner som man da kan kjøre tester og gjøre oppgaver på. På denne måten får man dratt nytte av praktisk undervisning uten å måtte sette opp fysiske maskiner. Skulle man komme i skade for å kjøre en kommando eller gjøre en endring som ødelegger konfigurasjonen, skal det bare et par tastetrykk til for å gjenopprette opprinnelig konfigurasjon.
 Dagens løsning er basert på MLN(ref!), men er litt kompleks på administrasjons-siden samt har vist ytelsesproblemer. All administrasjon må gjøres av en administrator, og når en hel klasse bruker de virtuelle maskinene samtidig går mye av tiden til å vente på at kommandoer skal kjøres og at de virtuelle maskinene skal "reagere".
 Per dags dato er det ikke mulighet for at studenter/faglig ansatte, på en lettvint måte, kan opprette og administrere en eller flere virtuelle maskiner. 
 
@@ -222,12 +220,13 @@ Litt usikker på ka som skal være her, så sett opp ei fin liste:
 Omfang
 -------
 
-Omfang - kan være ganske stort.
+Omfang - kan være ganske stort. (Trenger vi egentlig dette?)
 
 Avgrensing
 -----------
 
-Se `Avgrensing (Tema med avgrensing)`_ fra kravspesifikasjonen??
+*Hentet fra kravspesifikasjonen*
+Prosjektet skal først og fremst implementere OpenStack-rammeverket for å virkeliggjøre målene nevnt i 1.2(???). Å bygge en privat skyløsning er et prosjekt som vanligvis spenner over en mye lengre tidsperiode enn vi har til rådighet. Derfor vil vi ikke drive ytelsestesting og analyse (da dette dekkes av en annen bacheloroppgave). Mulighetene for “high availability” og redundans skal ikke dekkes. Primært skal systemet utvikles for å bli brukt på HiG, for de aktuelle emnene, ikke for eksterne brukere. Allikevel bør det være enkelt å utvide det i den retningen.
 
 Studentenes faglige bakgrunn
 -----------------------------
@@ -237,7 +236,7 @@ Studentenes faglige bakgrunn
 :rubric:`- Egen bakgrunn og kompetanse. Hva må læres?    - Python, Django, OpenStack`
 
 
-| Gruppemedlemmene kommer fra to forskjellige studieretninger, Jon Arne og Lars Erik studerer Drift av Nettverk og Datasystemer og Hallvard studerer Programvareutvikling. Hallvard har kunnskapen som trengs innenfor programmering og utvikling, Jon Arne og Lars Erik stiller med kompetanse innenfor nettverk. Vi har alle erfaring med C++ og Java fra programmeringsfag ved Høgskolen i Gjøvik. I tillegg kan Hallvard sjonglere. 
+| Gruppemedlemmene kommer fra to forskjellige studieretninger, Jon Arne og Lars Erik studerer Drift av Nettverk og Datasystemer og Hallvard studerer Programvareutvikling. Hallvard har kunnskapen som trengs innenfor programmering og utvikling, Jon Arne og Lars Erik stiller med kompetanse innenfor nettverk. Vi har alle gode kunnskaper innen linux, samt C++ og Java fra programmeringsfag ved Høgskolen i Gjøvik. I tillegg kan Hallvard sjonglere. 
 |
 | **Tilsammen utgjør dette en dødelig kombinasjon.**
 |
@@ -284,6 +283,7 @@ Liste over terminologier:
   - **Prosjekt:** Samling av virtuelle maskiner. Et prosjekt har en kvote tilknyttet seg.
   - **Tenant:** Et prosjekt (OpenStack-terminlogi)
   - **IP-pool:** En rekke IP-adresser
+  - **MVC:** Model view controller, et pattern for å skille logikk,data og presentasjon.
 
 Problemområde, avgrensing og oppgavedefinisjon
 -----------------------------------------------
@@ -712,7 +712,7 @@ Virtualisering
 ---------------
 
 Når det gjelder datamaskiner, er virtualisering å lage en virtuell versjon av noe, som en hardware-plattform, et operativsystem, lagringsenhet eller nettverksressurser.
-Ved hjelp av virtualisering kan man kjøre flere operativsystemer på samme PC, 
+Ved hjelp av virtualisering kan man installere et operativsystem på en virtuell maskin i et virtualiserings-program (VMware, Virtualbox), som da blir lagret som filer på harddisken. Slik kan man teste et operativsystem uten å installere det på selve harddisken over, eller ved siden, av det operativsystemet som allerede er installert.  
 
 OpenStack
 ----------
@@ -957,12 +957,32 @@ Denne modellen passer godt i større implementasjoner, siden den er mest dynamis
 Installasjon av OpenStack
 **************************
 
-Controller, compute osv.
+*Controller, compute osv.*
 
+**NOTE: Veldig overordnet og i stikkordsform. Blir fixet nærmere jul!**
+
+Krav til maskinvare og programvare:
+På controlleren er anbefalt maskinvare en 64-bit x86 prosessor, 12 GB RAM, 30 GB diskplass og 1 gigabit-nettverkskort. For Volume storage er to disker med 2 TB lagringsplass.
+Compute-noder er anbefalt maskinvare 64-bit x86-prosessor, 32 GB RAM, 30 GB diskplass og 2 nettverkskort på 1 GB. 
+
+Det finnes pakker for CentOS, Debian, Fedora, RHEL, Debian og Ubuntu.
+Compute bruker PostgreSQL eller MySQL, Object storage bruker SQLite.
+
+Tids-synkronisering som NTP må installeres, i tillegg til at det kreves en root-bruker eller en bruker med sudo-rettigheter.
+
+Installasjon:
+Installer ntp
+Installer keystone: sudo apt-get install keystone, sett opp database, gjør nødvendige endringer i /etc/keystone/keystone.conf (admin-token o.l.), sett opp tenants, users og roles.
+Installer Glance: sudo apt-get install glance, sett opp database, gjør nødvendige endringer i config-filene i /etc/glance/,.
+
+Sett opp nettverk, sett opp database, installer RabbitMQ og nova* (nova-compute nova-volume nova-vncproxy nova-api nova-ajax-console-proxy nova-cert nova-consoleauth nova-doc nova-scheduler nova-network), sett opp /etc/nova/nova.conf, lag nettverk via nova-manage, lag credentilals.
+
+For flere compute-noder er nova-network og nova-compute et krav, samt /etc/nova/nova.conf som peker til controlleren og hvor de andre tjenestene kjører (RabbitMQ o.l.).
 
 Horizon
 ********
 
+Når compute og controller er installert kan webgrensesnittet og nødvendige pakker installeres: sudo apt-get install libapache2-mod-wsgi openstack-dashboard. Database må settes opp og synces. Webgrensesnittet nås via en webleser på ip-addressen til maskina det ble installert på, og for å logge inn brukes de brukernavn og passord som ble satt opp tidligere.
 
 Infrastruktur
 **************
