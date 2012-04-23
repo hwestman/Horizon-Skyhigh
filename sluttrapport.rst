@@ -729,35 +729,128 @@ Bakgrunn/fnuz
 Moduler
 *******
 
-Selve OpenStack er et modulbasert prosjekt, hvor hovedmodulene er Compute (Nova), Image Service (Glance) og Identity Service (Keystone).
+Selve OpenStack er et modulbasert prosjekt, hvor hovedmodulene er Compute (Nova), Image Service (Glance) og Identity Service (Keystone). Disse modulene er det absolutte minimum av hva som må implementeres i et fungerende system. De øvrige modulene som er beskrevet under er valgfrie, og noen av dem er heller ikke en offisiell del av prosjektet enda. Siden det er modulbasert, kan alle modulene, samt tjenestene tilhørende de forskjellige modulene, både dupliserers og distribueres til flere forskjellige fysiske servere. Dette gjør systemet meget skalerbart og enkelt og lastbalansere.
 OpenStack er skrevet i Python.
 
+
+RabbitMQ
+.........
+RabbitMQ er ikke en del av OpenStack, men er en avhengighet i systemet. RabbitMQ er den tjenesten de forskjellige modulene bruker for å snakke med hverandre. Teknologien bak er AMQP[#_]. Enkelt forklart består dette i at en tjeneste sender en “message” (forespørsel) som så blir tolket, og sendt til rett mottaker. OpenStack benytter kun asynkrone kall til RabbitMQ for å sikre at ingen tjenester blir hengde å vente på hverandre.
+.. [#] Advanced Messaging Queue Protocol
 
 Nova
 .....
 
-Nova er kjernemodulen i OpenStack som tar seg av opprettelsen og administreringen av de virtuelle maskinene.
+Nova er kjernemodulen i OpenStack som tar seg av opprettelsen og administreringen av de virtuelle maskinene, samt håndtering av nettverk. Nova modulen er delt opp i forskjellig tjenester, som har sin spesifikke oppgave.
+
+**Nova-api**
+Tilbyr et grensesnitt mot brukerene, som tar i mot kall til de forskjellige tjenestene. Det er støtte for OpenStacks eget API, Amazons EC2 API samt et eget administrativt API forbeholdt systemadministratorer. Sistnevnte er realisert i form av klienten *nova-manage*. I tillegg til å ta i mot disse kallene, er det også denne tjenesten som initierer handlinger hos de andre tjenestene (f. eks å starte en instans). Nova-api står også for sjekk mot brukerens kvoter i prosjektet det jobbes på. Nova-api kjøres typisk på den maskinen man velger som controller.
+
+**Nova-compute**
+Denne tjenesten står for oppretting og terminering av virtuelle maskiner. For å realisere dette, snakker nova-compute med de forskjellige API’ene for de hypervisorene som er støttet. Eksempelvis libvirt for KVM/qemu og XenAPI for XenServer/XCP. Når nova-api har mottatt en forespørsel om en ny virtuell maskin, blir den plassert i køsystemet og hentet ned fra køsystemet av nova-compute. Deretter blir det kjørt en rekke systemkommandoer for å gjennomføre forespørselen som kom gjennom API’et. En typisk serie av systemkommandoer ved oppstart av en ny virtuell maskin vil være:
+
+- Lage konfigurasjonsfil for virtualiseringsplatformen man har valgt. F.eks lage en XML-fil for libvirt
+- Sette opp brannmurregler i iptables
+- Opprette en katalog der blant annen disk-filen til den nye virtuelle maskinen blir lagret. Disse ligger under /var/lib/nova/instances/instance-XXXXXXX
+- Kopiere over image-fil med operativsystem fra glance til den compute-noden som skal kjøre den akutelle virtuelle makinen. Dette gjøres kun dersom det valget imaget aldri har blir kjørt fra compute-noden. Imagene blir lagret i katalogen /var/lib/nova/_base.
+- Kopiere over image-filen til den nye instansens katalog. Dersom image-filen allerede finnes på compute-noden blir den ikke hentet fra glance først.
+- Kjører kommandoer for å starte instansen. Hvilke kommandoer som blir kjørt avhenger her av hvilken hypervisor som er valgt.
+
+Underveis i denne prosessen vil det hele tiden rapporteres til databasen som tilstanden på den nye instansen.
+
+**Nova-volume**
+Håndterer opprettelse, sletting og tilegning av fysisk lagringsplass til instanser. Man har mulighet til å legge til ekstra lagringsplass på instansene i etterkant av opprettelsen, slik at man enkelt kan løse utfordringer i forbindelse med dette. Volumene blir typisk hentet fra iSCSI. Nova Volume tilsvarer Amazons Elastic Block Storage. Tjenesten fungerer på akkurat samme måte som compute. Det blir sendt forespørsler til køsystemet, som nova-volume henter ned, og prosesserer.
+
+**Nova-network**
+Fungerer konseptuelt på akkurat samme måten som volume og compute, og håndterer følgelig alle forespørsler i køsystemet som har med nettverk å gjøre. Dette omfatter opprettelse av nettverksbroer, endring i brannmur, tildeling av nettverk, DHCP-oppsett og tildeling av floating-IP’s. Nova-network er dypere forklart i `Nettverk i OpenStack_`.
+
+**Nova-schedule**
+Denne tjenesten tolker alle meldinger i køsystemet, og sender dem til den noden forespørselen gjelder. F.eks en forespørsel om å terminere en virtuell maskin skal sendes til en nova-compute node. I nåværende utgave av OpenStack kjører nova-schedule i noe man kaller “muliti”-mode. Man kan velge en separat algoritme for compute og en for volume. Det tilbys tre forskjellige algoritmer:
+
+- chance
+- filter
+- simple
+
+*Chance* velger en tilfeldig node på tvers av alle tilgjengelighetssoner. *Filter* gir muligheten til å spesifere hvilken node man vil bruke. *Simple* velger den noden som på det tidspunktet meldingen blir tolket, har minst last. Chance er standard for volume, og filter er standard for compute.
+
 
 
 Glance
 .......
 
-De virtuelle disk-imagene blir administrert via Glance, og støtter disk-formater som Raw, Machine (kernel/ramdisk outside of image, a.k.a. AMI), VHD (Hyper-V), VDI (VirtualBox), qcow2 (Qemu/KVM), VMDK (VMWare) og OVF (VMWare, others).
+De virtuelle disk-imagene blir administrert via Glance, og støtter disk-formater som Raw, Machine (kernel/ramdisk outside of image, a.k.a. AMI), VHD (Hyper-V), VDI (VirtualBox), qcow2 (Qemu/KVM), VMDK (VMWare) og OVF (VMWare, andre). Disse disk-imagene kan lagres på flere forskjellige måter. Man kan bruke lokalt filsystem (/var/lib/glance/images), Swift, dirkete hos Amazon S3, eller HTTP. Opplastingen og registreringen foregår enten gjennom Glance API eller EC2-api’et. Glance består av to tjenester, i tillegg til en database:
+
+- glance-api
+- glance-registry
+
+Glance-api tar i mot alle API-kall som omhandler registrering av nye image, overføring av image til compute-noder og lagring av image. Glance-registry lagrer og prosesserer metadata angående nye image.
 
 Keystone
 ........
 
-Identitets-tjenesten Keystone holder oversikt over alle brukere i OpenStack.
+Keystone er autentiserings- og identitetstjenesten i OpenStack. Alle modulene i OpenStack benytter seg av denne som standard. Keystone er i all hovedsak en database som inneholder informasjon om brukere, prosjekter, roller, tokens, tjenester, endpoints for tjenestene. Hvilket system som brukes for den databasen kan man velge selv, men det vanligster er en form for SQL-database. Det er også støtte for LDAP[#_] og KVS[#_]. Ved hjelp av disse tilbys det autentisering på flere forskjellige måter. En bruker kan autentiseres ved:
+
+- Brukernavn og passord
+- Brukernavn og API-nøkkel
+
+Keystone introduserer noen konsepter i forbindelse med sine tjenester:
+
+**User**
+En bruker er som regel en representasjon av en person, som skal ha tilgang til de forskjellige tjenestene. Men, en bruker kan også være en tjeneste i seg selv.
+
+**Token**
+Konseptet med tokens er ganske enkelt. En token er tilfeldig generert tekststreng som brukes for å gi brukere tilgang til tjenester. En token er gitt et sett privilegier (scope), der man f.eks kan få administrative rettigheter.
+
+**Tenant**
+Er i all hovedsak det keystone kaller et prosjekt. Alle instanser, nettverk, volumer, IP-adresser, kvoter og sikkerhetsregler er knyttet til en tenant.
+
+**Service**
+Alle tjenestene i OpenStack må registreres i Keystone. Hver tjeneste har en bruker knyttet til seg, og hver tjeneste tilbyr et eller flere endpoint som brukerne kan akesessere tjenester gjennom.
+
+**Endpoint**
+Et endpoint er en nettverksadresse som peker til en tjeneste.
+
+**Role**
+Alle brukere knyttes til et prosjekt med en bestemt rolle. Til hver rolle er det tilknyttet et sett med privilegier og rettigheter. I Keystone så er listen over roller en bruker har i de forskjellige prosjektene knyttet til den token man får ved en vellykket autentisering.
+
+.. [#] Lightweight Directory Access Protocol
+.. [#] Key Value Storage
 
 Horizon
 ........
 
-Selve webgrensesnittet til OpenStack kalles Horizon, og tilbyr administrasjon av kjernefunksjonaliteten i OpenStack. 
+Horizon er webgrensesnittet i OpenStack. Gjennom horizon får administratorer og brukere tilgang til den mest grunnleggende tjenestene. Brukere har adgang til å:
+
+- Administrere instanser innenfor de prosjektene de er medlem i (opprette, slette, restarte)
+- Ta snapshots av kjørende instanser, samt administrere disse (redigere, slette)
+- Allokere såkalte floating IP adresser (se nettverkskapittelet)
+- Administrere volumer innenfor de prosjektene de er medlem i (opprette, slette, knytte til instans, fjerne fra instans)
+- Administrere sikkerhetsgrupper, det vil si grupper av brannmurregler for instansene i prosjektet
+- Administrere nøkkelpar for tilgang til instanser
+
+En administrator vil i tillegg til nevnte rettigheter, ha mulighet til å:
+
+- Monitorere samlet ressursbruk for alle prosjekter, fra tidenes morgen
+- Håndtere alle kjørende instanser i hele implementasjonen
+- Få en oversikt over registrerte tjenester
+- Definere “flavors”, det vil si forhåndsdefinerte maskinvarekonfigurasjoner som brukerne kan velge ved opprettelse av instanser
+- Administrere alle disk-images som er registrert
+- Administrere prosjekter (opprette, endre, slette, modifisere tilknyttede brukere)
+- Administrere brukere (opprette, endre, slette)
+- Sette kvoter per prosjekt. En kvote inneholder maksimum antall CPU kjerner, instanser, MB RAM, floating IP’er, volumer (og samlet størrelse på disse) og filer man kan injisere i instanser (og maks størrelse på disse)
+
+Horizon kjører via webserveren Apache via mod_wsqi, og krever kun en database i tillegg. All informasjon blir hentet fra andre tjenester via deres API’er, slik at selve web-apllikasjonen lagrer svært lite data i seg selv.
 
 (Swift)
 .......
 
-Swift er lagringsløsningen scalable object storage.
+Swift er OpenStacks modul for det man kaller “object storage” i sky-verden. Object Storage er annen måte å tenke lagring på, i forhold til tradisjonelle filsystemer. Funksjonaliteten er mye den samme, men man vil ikke kunne montere Object Storage på samme måte som man kan fra f.eks et SAN eller et NAS. Swift kan sammenlignes direkte med Amazons S3. Object Storage baserer seg på følgende konsepter:
+
+**Accounts og Account servere**
+Brukere av lagringssystemet må identifiseres og autentiseres (f.eks via keystone) for å få tilgang til sine filer. Hver konto er tilknyttet en bruker, som igjen har sine “containers” tilknyttet seg.
+
+*Containers og objects**
+Containers er nærmest ekvivalente til mapper i tradisjonelle filsystemer. Forskjellen er at containers ikke kan nøstes på samme måte. Objects er på samme måte ekvivalent til filer. Et object kan ha en mengde metadata knyttet til seg i form “key-value” par. Dette er ment for å beskrive objekter best mulig.
 
 (Quantum)
 ..........
@@ -1047,6 +1140,10 @@ Cisco CCNA Exploration 4.0 LAN Switching & Wireless, kap 3 VLANs
 Cisco CCNA Exploration 4.0 LAN Switching & Wireless, kap 6 Inter-VLAN routing
 Cisco CCNA Exploration 4.0 Accessing the WAN, kap 7.1 DHCP  
 ⁴ http://blogs.cisco.com/datacenter/digging-deeper-into-vxlan/ 14.03.12
+http://docs.openstack.org/trunk/openstack-compute/admin/content/ 23.04.12
+http://www.rabbitmq.com/tutorials/amqp-concepts.html 23.04.12
+https://github.com/openstack/nova/tree/master/nova/scheduler 23.04.12
+
 
 .. raw:: pdf
 
