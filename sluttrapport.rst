@@ -769,21 +769,69 @@ Quantum er en modul som gir nettverkstilkobling-as-a-service for enheter som adm
 
 Melange gir nettverks-informasjons-tjenester med fokuks på administrering av IP-adresser. 
 
+
 MVC
-****
+***
+
+Model view controller er et design-pattern som er designet for å skille data, logikk og presentasjon i et grensesnitt. 
+
+Ett typisk MVC vil inneholde en modul som behandler forespørsler fra en bruker(controller), en modul som  presenterer data(view) og en for å formidle data eksempelvis til og fra en database(model). 
+
+Ett typisk MVC vil a ha en modul (View) som rendrer et GUI for brukeren, en modul (Controller) som bestemmer hva som skal rendres og med hvilke data, og en modul (Model) som fungerer som et abstraksjonslag mot datalagringen
+
+Når en bruker trykker på en link på en nettleser, er det controlleren sitt ansvar å behandle forespørselen, og sende den videre til riktig view. Når viewet får forespørselen spør den modellen etter riktig data, og viser resultatet frem for brukeren.
 
 
 Django
-.......
+******
 
-Python
-.......
+Django er ett web-rammeverk for Python, med sterk fokus på effektivitet. Det er opprinnelig designet for publisering i avisredaksjoner men har i senere tid gått over til å blir et rammevek for generell webutvikling. Styrken i Django ligger i måten de har implementer MVC, ved å skille logikk, data, og presentasjon på en slik måte sørger de for ett kjapt utviklingsmiljø med store muligheter for utvidelser. Nå er det sagt at det er ett mvc, men en viktig ting å nevne i forhold til at de har implementert mvc på en spesiell måte er: De bruker et template system som gjør at et view ikke nødvendigvis er hvordan data skal vises men hvilken data som blir vist. Og da utgjør template-systemet rollen for hvordan data skal vises.
 
-Horizon
-........
+Strukturen for ett django-prosjekt ser slik ut:
 
-Patterns
-*********
+Mitt prosjekt
+        manage.py
+        minside
+                settings.py     //registrere din applikasjon
+                urls.py         //her vil du dirigere til din applikasjon
+                wsgi.py  
+
+Prosjektet håndterer utvidelser (kalt applikasjoner) som individiuelle moduler uavhengig av hverandre. Slik at dersom en bruker eksempelvis har laget en applikasjon i sitt prosjekt for å vise en kalender skal denne kunne benyttes i hvilket som helst annet prosjekt.
+
+Med dette utgangspunktet registrerer man applikasjoner som har følgende struktur.
+
+minapplikasjon
+        __init__.py
+        models.py
+        views.py
+        tests.py
+En applikasjon som er registrert slik vil også være knyttet til en mappe med tilsvarende navn som som inneholder templates. 
+
+
+Horizon(oppbygging)
+*******************
+
+Horizon baserer seg på pyton med Django som web-rammeverk. Dette innebærer i hovedsak at Django´s implementasjon av MVC dikterer hvordan Horizon opererer. 
+
+Horizon baserer seg i utgangspunktet på følgende 3 applikasjoner: Syspanel, Dash og Settings. Disse er kalt dashboards og består igjen av panels som er spesifikt for Horizon, panels har sine egne views og controller. Dette er ett eksempel på Django’s styrke, altså at mvc er gjenbrukbart gjennom hele systemet ved bruk av applikasjoner.
+
+En horizon-applikasjon er strukturert på følgende måte:
+
+syspanel
+        dashboad.py
+        templates
+        panel
+                panel.py
+                urls.py
+                views.py
+                forms.py
+                templates
+
+Model
+.....
+Horizon benytter seg ikke av model på den tradisjonelle Django-måten. Grunnen til dette er at Horizon kobler seg direkte til databasene fra de andre Openstack-modulene. De har sin egen abstraksjon mot databaselaget som er designet for Django, slik at Django behandler datasettene på samme måte, bare ikke ved hjelp av sine egne modeller.
+
+
 
 .. raw:: pdf
 
