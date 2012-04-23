@@ -895,22 +895,24 @@ Django er ett web-rammeverk for Python, med sterk fokus på effektivitet. Det er
 
 Strukturen for ett django-prosjekt ser slik ut:
 
-Mitt prosjekt
-        manage.py
-        minside
-                settings.py     //registrere din applikasjon
-                urls.py         //her vil du dirigere til din applikasjon
-                wsgi.py  
+| Mitt prosjekt
+|         manage.py
+|         minside
+|                
+|                settings.py     //registrere din applikasjon
+|                urls.py         //her vil du dirigere til din applikasjon
+|                wsgi.py  
 
 Prosjektet håndterer utvidelser (kalt applikasjoner) som individiuelle moduler uavhengig av hverandre. Slik at dersom en bruker eksempelvis har laget en applikasjon i sitt prosjekt for å vise en kalender skal denne kunne benyttes i hvilket som helst annet prosjekt.
 
 Med dette utgangspunktet registrerer man applikasjoner som har følgende struktur.
 
-minapplikasjon
-        __init__.py
-        models.py
-        views.py
-        tests.py
+| minapplikasjon
+|         __init__.py
+|         models.py
+|         views.py
+|         tests.py
+
 En applikasjon som er registrert slik vil også være knyttet til en mappe med tilsvarende navn som som inneholder templates. 
 
 
@@ -923,15 +925,16 @@ Horizon baserer seg i utgangspunktet på følgende 3 applikasjoner: Syspanel, Da
 
 En horizon-applikasjon er strukturert på følgende måte:
 
-syspanel
-        dashboad.py
-        templates
-        panel
-                panel.py
-                urls.py
-                views.py
-                forms.py
-                templates
+| syspanel
+|        dashboad.py
+|        templates
+|        panel
+|
+|                panel.py
+|                urls.py
+|                views.py
+|                forms.py
+|                templates
 
 Model
 .....
