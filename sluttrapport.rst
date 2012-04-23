@@ -735,7 +735,8 @@ OpenStack er skrevet i Python.
 
 RabbitMQ
 .........
-RabbitMQ er ikke en del av OpenStack, men er en avhengighet i systemet. RabbitMQ er den tjenesten de forskjellige modulene bruker for å snakke med hverandre. Teknologien bak er AMQP[#_]. Enkelt forklart består dette i at en tjeneste sender en “message” (forespørsel) som så blir tolket, og sendt til rett mottaker. OpenStack benytter kun asynkrone kall til RabbitMQ for å sikre at ingen tjenester blir hengde å vente på hverandre.
+RabbitMQ er ikke en del av OpenStack, men er en avhengighet i systemet. RabbitMQ er den tjenesten de forskjellige modulene bruker for å snakke med hverandre. Teknologien bak er AMQP [#]_. Enkelt forklart består dette i at en tjeneste sender en “message” (forespørsel) som så blir tolket, og sendt til rett mottaker. OpenStack benytter kun asynkrone kall til RabbitMQ for å sikre at ingen tjenester blir hengde å vente på hverandre.
+
 .. [#] Advanced Messaging Queue Protocol
 
 Nova
@@ -744,9 +745,11 @@ Nova
 Nova er kjernemodulen i OpenStack som tar seg av opprettelsen og administreringen av de virtuelle maskinene, samt håndtering av nettverk. Nova modulen er delt opp i forskjellig tjenester, som har sin spesifikke oppgave.
 
 **Nova-api**
+
 Tilbyr et grensesnitt mot brukerene, som tar i mot kall til de forskjellige tjenestene. Det er støtte for OpenStacks eget API, Amazons EC2 API samt et eget administrativt API forbeholdt systemadministratorer. Sistnevnte er realisert i form av klienten *nova-manage*. I tillegg til å ta i mot disse kallene, er det også denne tjenesten som initierer handlinger hos de andre tjenestene (f. eks å starte en instans). Nova-api står også for sjekk mot brukerens kvoter i prosjektet det jobbes på. Nova-api kjøres typisk på den maskinen man velger som controller.
 
 **Nova-compute**
+
 Denne tjenesten står for oppretting og terminering av virtuelle maskiner. For å realisere dette, snakker nova-compute med de forskjellige API’ene for de hypervisorene som er støttet. Eksempelvis libvirt for KVM/qemu og XenAPI for XenServer/XCP. Når nova-api har mottatt en forespørsel om en ny virtuell maskin, blir den plassert i køsystemet og hentet ned fra køsystemet av nova-compute. Deretter blir det kjørt en rekke systemkommandoer for å gjennomføre forespørselen som kom gjennom API’et. En typisk serie av systemkommandoer ved oppstart av en ny virtuell maskin vil være:
 
 - Lage konfigurasjonsfil for virtualiseringsplatformen man har valgt. F.eks lage en XML-fil for libvirt
@@ -759,12 +762,15 @@ Denne tjenesten står for oppretting og terminering av virtuelle maskiner. For �
 Underveis i denne prosessen vil det hele tiden rapporteres til databasen som tilstanden på den nye instansen.
 
 **Nova-volume**
+
 Håndterer opprettelse, sletting og tilegning av fysisk lagringsplass til instanser. Man har mulighet til å legge til ekstra lagringsplass på instansene i etterkant av opprettelsen, slik at man enkelt kan løse utfordringer i forbindelse med dette. Volumene blir typisk hentet fra iSCSI. Nova Volume tilsvarer Amazons Elastic Block Storage. Tjenesten fungerer på akkurat samme måte som compute. Det blir sendt forespørsler til køsystemet, som nova-volume henter ned, og prosesserer.
 
 **Nova-network**
-Fungerer konseptuelt på akkurat samme måten som volume og compute, og håndterer følgelig alle forespørsler i køsystemet som har med nettverk å gjøre. Dette omfatter opprettelse av nettverksbroer, endring i brannmur, tildeling av nettverk, DHCP-oppsett og tildeling av floating-IP’s. Nova-network er dypere forklart i `Nettverk i OpenStack_`.
+
+Fungerer konseptuelt på akkurat samme måten som volume og compute, og håndterer følgelig alle forespørsler i køsystemet som har med nettverk å gjøre. Dette omfatter opprettelse av nettverksbroer, endring i brannmur, tildeling av nettverk, DHCP-oppsett og tildeling av floating-IP’s. Nova-network er dypere forklart i `Nettverk i OpenStack`_.
 
 **Nova-schedule**
+
 Denne tjenesten tolker alle meldinger i køsystemet, og sender dem til den noden forespørselen gjelder. F.eks en forespørsel om å terminere en virtuell maskin skal sendes til en nova-compute node. I nåværende utgave av OpenStack kjører nova-schedule i noe man kaller “muliti”-mode. Man kan velge en separat algoritme for compute og en for volume. Det tilbys tre forskjellige algoritmer:
 
 - chance
@@ -772,7 +778,6 @@ Denne tjenesten tolker alle meldinger i køsystemet, og sender dem til den noden
 - simple
 
 *Chance* velger en tilfeldig node på tvers av alle tilgjengelighetssoner. *Filter* gir muligheten til å spesifere hvilken node man vil bruke. *Simple* velger den noden som på det tidspunktet meldingen blir tolket, har minst last. Chance er standard for volume, og filter er standard for compute.
-
 
 
 Glance
@@ -788,7 +793,7 @@ Glance-api tar i mot alle API-kall som omhandler registrering av nye image, over
 Keystone
 ........
 
-Keystone er autentiserings- og identitetstjenesten i OpenStack. Alle modulene i OpenStack benytter seg av denne som standard. Keystone er i all hovedsak en database som inneholder informasjon om brukere, prosjekter, roller, tokens, tjenester, endpoints for tjenestene. Hvilket system som brukes for den databasen kan man velge selv, men det vanligster er en form for SQL-database. Det er også støtte for LDAP[#_] og KVS[#_]. Ved hjelp av disse tilbys det autentisering på flere forskjellige måter. En bruker kan autentiseres ved:
+Keystone er autentiserings- og identitetstjenesten i OpenStack. Alle modulene i OpenStack benytter seg av denne som standard. Keystone er i all hovedsak en database som inneholder informasjon om brukere, prosjekter, roller, tokens, tjenester, endpoints for tjenestene. Hvilket system som brukes for den databasen kan man velge selv, men det vanligster er en form for SQL-database. Det er også støtte for LDAP [#]_ og KVS [#]_. Ved hjelp av disse tilbys det autentisering på flere forskjellige måter. En bruker kan autentiseres ved:
 
 - Brukernavn og passord
 - Brukernavn og API-nøkkel
@@ -796,21 +801,27 @@ Keystone er autentiserings- og identitetstjenesten i OpenStack. Alle modulene i 
 Keystone introduserer noen konsepter i forbindelse med sine tjenester:
 
 **User**
+
 En bruker er som regel en representasjon av en person, som skal ha tilgang til de forskjellige tjenestene. Men, en bruker kan også være en tjeneste i seg selv.
 
 **Token**
+
 Konseptet med tokens er ganske enkelt. En token er tilfeldig generert tekststreng som brukes for å gi brukere tilgang til tjenester. En token er gitt et sett privilegier (scope), der man f.eks kan få administrative rettigheter.
 
 **Tenant**
+
 Er i all hovedsak det keystone kaller et prosjekt. Alle instanser, nettverk, volumer, IP-adresser, kvoter og sikkerhetsregler er knyttet til en tenant.
 
 **Service**
+
 Alle tjenestene i OpenStack må registreres i Keystone. Hver tjeneste har en bruker knyttet til seg, og hver tjeneste tilbyr et eller flere endpoint som brukerne kan akesessere tjenester gjennom.
 
 **Endpoint**
+
 Et endpoint er en nettverksadresse som peker til en tjeneste.
 
 **Role**
+
 Alle brukere knyttes til et prosjekt med en bestemt rolle. Til hver rolle er det tilknyttet et sett med privilegier og rettigheter. I Keystone så er listen over roller en bruker har i de forskjellige prosjektene knyttet til den token man får ved en vellykket autentisering.
 
 .. [#] Lightweight Directory Access Protocol
@@ -841,15 +852,17 @@ En administrator vil i tillegg til nevnte rettigheter, ha mulighet til å:
 
 Horizon kjører via webserveren Apache via mod_wsqi, og krever kun en database i tillegg. All informasjon blir hentet fra andre tjenester via deres API’er, slik at selve web-apllikasjonen lagrer svært lite data i seg selv.
 
-(Swift)
+Swift
 .......
 
 Swift er OpenStacks modul for det man kaller “object storage” i sky-verden. Object Storage er annen måte å tenke lagring på, i forhold til tradisjonelle filsystemer. Funksjonaliteten er mye den samme, men man vil ikke kunne montere Object Storage på samme måte som man kan fra f.eks et SAN eller et NAS. Swift kan sammenlignes direkte med Amazons S3. Object Storage baserer seg på følgende konsepter:
 
 **Accounts og Account servere**
+
 Brukere av lagringssystemet må identifiseres og autentiseres (f.eks via keystone) for å få tilgang til sine filer. Hver konto er tilknyttet en bruker, som igjen har sine “containers” tilknyttet seg.
 
 *Containers og objects**
+
 Containers er nærmest ekvivalente til mapper i tradisjonelle filsystemer. Forskjellen er at containers ikke kan nøstes på samme måte. Objects er på samme måte ekvivalent til filer. Et object kan ha en mengde metadata knyttet til seg i form “key-value” par. Dette er ment for å beskrive objekter best mulig.
 
 (Quantum)
