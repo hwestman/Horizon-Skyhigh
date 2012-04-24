@@ -44,8 +44,8 @@ Bacheloroppgave
 
 .. ``twelvepoint``
 
-.. header:: SkyHigh - Sluttrapport
-.. footer:: Pedersen, Westgaard & Westman           -                 ###Page###
+.. header:: SkyHigh Adm
+.. footer:: ###Page###
 
 
 
@@ -72,9 +72,9 @@ Bacheloroppgave
    "**Antall Sider:**", "**Antall bilag:** **Tilgjengelighet (åpen/konfidensiell):** Åpen"
    "**Kort beskrivelse av bacheloroppgaven:**", "Sette opp en skalerbar sky-tjeneste til bruk i undervisning på HiG"
 
-  - Se vedlegg M
-  - Ekstra forside?
-  - Skriv et godt sammendrag så det kan presenteres
+Se vedlegg M. Ekstra forside? Skriv et godt sammendrag så det kan presenteres.
+
+
 
    
 .. raw:: pdf
@@ -83,7 +83,7 @@ Bacheloroppgave
 
 
 .. csv-table:: Tabell 2: Summary of Graduate Project
-   :widths: 15,50  
+  :widths: 15,50  
 
    "**Title:**", "SkyHiGh Adm      **Nr: - Dato: 24.05.12**"
    "**Participants**", "Lars Erik Pedersen, Jon Arne Westgaard, Hallvard Westman"
@@ -238,7 +238,6 @@ Studentenes faglige bakgrunn
 
 | Gruppemedlemmene kommer fra to forskjellige studieretninger, Jon Arne og Lars Erik studerer Drift av Nettverk og Datasystemer og Hallvard studerer Programvareutvikling. Hallvard har kunnskapen som trengs innenfor programmering og utvikling, Jon Arne og Lars Erik stiller med kompetanse innenfor nettverk. Vi har alle gode kunnskaper innen linux, samt C++ og Java fra programmeringsfag ved Høgskolen i Gjøvik. I tillegg kan Hallvard sjonglere. 
 |
-| **Tilsammen utgjør dette en dødelig kombinasjon.**
 |
 | Ingen av oss har erfaring med OpenStack, så her får vi litt å sette oss inn i.
 | Python er et programmeringsspråk vi har hørt om, men ikke programmert noe i. Siden OpenStack er skrevet i Python kreves det at vi lærer oss dette.
@@ -717,11 +716,11 @@ Ved hjelp av virtualisering kan man installere et operativsystem på en virtuell
 OpenStack
 ----------
 
-OpenStack er et cloud-computing-prosjekt som tilbyr Infrastructure as a Service (IaaS), startet av Rackspace og Nasa. Per 17.april 2012 har over 150 bedrifter sluttet seg til prosjektet, som AMD, Intel, Canonical, SUSE Linux, Red Hat, Cisco, Dell, HP og IBM.
+OpenStack er et cloud-computing-prosjekt som tilbyr Infrastructure as a Service (IaaS), startet av Rackspace og Nasa i juli 2010. Per 17.april 2012 har over 150 bedrifter sluttet seg til prosjektet, som AMD, Intel, Canonical, SUSE Linux, Red Hat, Cisco, Dell, HP og IBM (ref http://openstack.org/community/companies/)
 
 Første versjon, Austin, ble sluppet 21. oktober 2010, og har siden da vært i kontinuerlig utvikling. Nyeste versjon er Essex, sluppet 5.april 2012.
 
-Hovedmålet til prosjektet er å gi alle organisasjoner mulighet til å opprette og tilby nettskyer som kan kjøre på standard maskinvare.
+Hovedmålet til OpenStack-prosjektet er å gi alle organisasjoner mulighet til å opprette og tilby nettskyer som kan kjøre på standard maskinvare.
 
 Bakgrunn/fnuz
 **************
@@ -1119,27 +1118,69 @@ Installasjon av OpenStack
 **NOTE: Veldig overordnet og i stikkordsform. Blir fixet nærmere jul!**
 
 Krav til maskinvare og programvare:
-På controlleren er anbefalt maskinvare en 64-bit x86 prosessor, 12 GB RAM, 30 GB diskplass og 1 gigabit-nettverkskort. For Volume storage er to disker med 2 TB lagringsplass.
-Compute-noder er anbefalt maskinvare 64-bit x86-prosessor, 32 GB RAM, 30 GB diskplass og 2 nettverkskort på 1 GB. 
 
-Det finnes pakker for CentOS, Debian, Fedora, RHEL, Debian og Ubuntu.
+På controlleren er anbefalt maskinvare en 64-bit x86 prosessor, 12 GB RAM, 30 GB diskplass og 1 stk gigabit-nettverkskort. For Volume storage to disker med 2 TB lagringsplass.
+For compute-noder er anbefalt maskinvare en 64-bit x86-prosessor, 32 GB RAM, 30 GB diskplass og 2 stk  gigabit-nettverkskort. 
+ 
+OpenStack er pakket for CentOS, Debian, Fedora, RHEL, Debian og Ubuntu.
 Compute bruker PostgreSQL eller MySQL, Object storage bruker SQLite.
+
+Ved hjelp av DevStack (http://devstack.org) kan man sette opp en fungerende OpenStack-installasjon med så lite som 2 kommandoer. DevStack er laget for å brukes i et utviklingsmiljø som et “proof-of-concept” hvor man kan teste de forskjellige komponentene, og er ikke anbefalt til bruk i produksjon. Installasjon av OpenStack via DevStack gjøres slik:
+
+:: 
+
+  git clone git://github.com/openstack-dev/devstack.git
+  cd devstack; ./stack.sh
+
+Selve installasjonen tar gjerne litt tid, men det er ingen konfigurasjon som må gjøres, og når installasjonen er ferdig har du en fullt fungerende OpenStack-installasjon.
+
+En alternativ måte å installere OpenStack på er med scriptet til ManagedIT (https://github.com/managedit/openstack-setup). Dette er et script hvor du først legger inn all ønskelig konfigurasjon og scriptet installerer OpenStack via pakkebrønnen. Dette scriptet automatiserer rett og slett den manuelle installasjonen, og kan brukes i produksjon.
+
+I tillegg kan man laste ned kildekoden fra Launchpad (https://launchpad.net/openstack), eller laste ned fra GitHub (https://github.com/openstack).
+
+StackOps (http://stackops.com ) er et firma som har spesialisert seg på levering av OpenStack med hardware, og tilbyr en ISO-fil basert på Ubuntu 10.04 LTS (http://stackops.org ) spesialisert for OpenStack. Per 24. april 2012 er denne i versjon 0.5, og distribusjonen er modifisert til å utelukkende inneholde de komponentene som kreves for at OpenStack Nova skal kjøre.
+
+Hvilken måte man velger å installere OpenStack på avhenger litt av hvordan man skal bruke den - skal man bare teste/gjøre utvikling vil scriptene fra DevStack og ManagedIT være tilstrekkelig. Planlegger man å bruke OpenStack i et produksjonsmiljø anbefales en manuell installasjon fra pakkebrønn, GitHub eller Launchpad. Man vil da få full kontroll over hele installasjonen og konfigurasjonen - men må følgelig ta et steg av gangen da det er mer konfigurasjon som må gjøres.
+
+
+Manuell installasjon:
+
+For komplett installasjonsguide, se http://docs.openstack.org/trunk/openstack-compute/install/content/ - her beskrives bare de overordnede steg for installasjon.
 
 Tids-synkronisering som NTP må installeres, i tillegg til at det kreves en root-bruker eller en bruker med sudo-rettigheter.
 
-Installasjon:
 Installer ntp
-Installer keystone: sudo apt-get install keystone, sett opp database, gjør nødvendige endringer i /etc/keystone/keystone.conf (admin-token o.l.), sett opp tenants, users og roles.
-Installer Glance: sudo apt-get install glance, sett opp database, gjør nødvendige endringer i config-filene i /etc/glance/,.
+
+Installer keystone:
+
+::
+
+   sudo apt-get install keystone
+
+Sett opp database, gjør nødvendige endringer i /etc/keystone/keystone.conf (admin-token o.l.), sett opp tenants, users og roles.
+
+Installer Glance:
+
+::
+
+  sudo apt-get install glance
+
+Sett opp database, gjør nødvendige endringer i config-filene i /etc/glance/.
 
 Sett opp nettverk, sett opp database, installer RabbitMQ og nova* (nova-compute nova-volume nova-vncproxy nova-api nova-ajax-console-proxy nova-cert nova-consoleauth nova-doc nova-scheduler nova-network), sett opp /etc/nova/nova.conf, lag nettverk via nova-manage, lag credentilals.
 
-For flere compute-noder er nova-network og nova-compute et krav, samt /etc/nova/nova.conf som peker til controlleren og hvor de andre tjenestene kjører (RabbitMQ o.l.).
+På compute-noder er nova-network og nova-compute et krav, samt /etc/nova/nova.conf som peker til controlleren og hvor de andre tjenestene kjører (RabbitMQ o.l.).
 
 Horizon
 ********
 
-Når compute og controller er installert kan webgrensesnittet og nødvendige pakker installeres: sudo apt-get install libapache2-mod-wsgi openstack-dashboard. Database må settes opp og synces. Webgrensesnittet nås via en webleser på ip-addressen til maskina det ble installert på, og for å logge inn brukes de brukernavn og passord som ble satt opp tidligere.
+Når compute og controller er installert kan webgrensesnittet og nødvendige pakker installeres:
+
+::
+
+  sudo apt-get install libapache2-mod-wsgi openstack-dashboard.
+
+Database må settes opp og synces. Webgrensesnittet nås via en webleser på ip-addressen til maskina det ble installert på, og for å logge inn brukes brukernavn og passord som ble satt opp tidligere i Keystone.
 
 Infrastruktur
 **************
@@ -1335,8 +1376,10 @@ Liste over tabeller
       
    "**For**", "Erik Hjelmås"
    "**som**", "Har behov for et helt nytt system som er skreddersydd for hans behov"
-   "**produktet navngitt**", "er en nettksy basert på OpenStack"
-   "**som**", "  - Lar seg administrere av brukere,  - Skalere,  - Lastbalansere"
+   "**produktet navngitt**", "er en nettsky basert på OpenStack"
+   "**som**", "- Lar seg administrere av brukere,
+  - Skalere
+  - Lastbalansere"
    "**i motsetning til**", "dagens system"
    "**Har vårt produkt**", "Løsningene på dagens problemer, i tillegg til nye krav satt av arbeidsgiver (se kravspesifikasjon)"
 
