@@ -864,16 +864,21 @@ Brukere av lagringssystemet må identifiseres og autentiseres (f.eks via keyston
 
 Containers er nærmest ekvivalente til mapper i tradisjonelle filsystemer. Forskjellen er at containers ikke kan nøstes på samme måte. Objects er på samme måte ekvivalent til filer. Et object kan ha en mengde metadata knyttet til seg i form “key-value” par. Dette er ment for å beskrive objekter best mulig.
 
-(Quantum)
+Quantum
 ..........
 
-Quantum er en modul som gir nettverkstilkobling-as-a-service for enheter som administreres av andre OpenStack-tjenester.
+Quantum er tjeneste for virtuelle L2 [#]_ nettverk. Den tilbyr et API for nettverkstrafikk mellom enheter fra de forskjellige OpenStack tjenestene, hovedsaklig i form av virtuelle switcher. For å realisere dette, bruker man en plugin (f.eks Open vSwitch eller Cisco Quantum plugin), slik at Quantum API blir et abstraksjonslag på samme måte som Nova. De virtuelle switchene vil ha samme muligheter for konfigurasjon som fysiske switcher, f.eks QoS, port security, monitorering osv. Det mest naturlige er å knytte Quantum sammen med Nova, for å skape interne logiske nett for prosjekter. Quantum er også natulig å kombinere med Melange. I skrivende stund mangler Quantum muligheten for å lage identiske interne nett, slik at muligheten til å ha identiske prosjekter, med identiske interne nett (som ikke er det samme logisk nettet) ikke er til stede.
 
-(Melange)
+
+Melange
 ..........
 
-Melange gir nettverks-informasjons-tjenester med fokuks på administrering av IP-adresser. 
+Melange er en tjeneste med fokus på IPAM (IP Address Management) og DHCP, for å gi en mer mer fleksibel løsning for L3 [#]_ addressering av virtuelle maskiner enn den som er innebygget i Nova. I fremtiden er det ventet at den også vil håndtere DNS, ruting og gateway mot internett, og i så måte ta over mye av de standard nettverksløsningene som finnes i nova i nåværende utgave.
 
+Melange-modulen er meget ny, og ble først innlemmet som en offisiell modul i Essex-utgaven. Det foreligger mange dokumenter på Melange sin fremitd, både som uavhengig og modul, og hvordan den skal implementeres med nova. Blant annet er det planlagt at den skal slåes sammen med Quantum. 
+
+.. [#] OSI Layer 2 - Fysisk adressering
+.. [#] OSI Layer 3 - Nettverkslaget, logisk adressering (IP)
 
 MVC
 ***
@@ -990,7 +995,6 @@ Nettverk
    "SkyRoute, Cisco 2800", "fa0/0", "ec:44:76:68:16:94", "10.0.0.2/30", ""
    "", "fa0/1", "ec:44:76:68:16:95", "192.168.99.1/24", ""
    "", "fa0/1.10", "''", "192.168.10.1/24", ""
-   "", "fa0/1.20", "''", "192.168.20.1/24", ""
    "", "fa0/1.30", "''", "192.168.30.1/24", ""
 
 
@@ -1002,26 +1006,26 @@ Nettverk
    "", "GE13-18", "1000mbit", "100-115 (VLAN for VM'er)", "på"
    "", "GE19-24", "1000mbit", "30 (storage)", "av"
    "", "GE25", "1000Mbit", "99 (native/management)", "av"
-   "", "GE26", "1000Mbit", "10, 20, 30, 99", "på"
+   "", "GE26", "1000Mbit", "10, 30, 99", "på"
 
 
 .. csv-table:: Tabell 11: Servere
    :header: "**Navn**", "**CPU**", "**RAM**", "**Disk**", "**IP**"
 
-   "dublin", "Intel Xeon 3060 2.4 GHz", "4GiB", "2 x 250 GB", "eth0: 192.168.10.2, eth1: oppe - ingen IP, eth3: 192.168.30.2"
-   "manchester", "Intel Xeon 3060 2.4 GHz", "4GB", "2 x 250 GB", "eth0: 192.168.20.10, eth1: ioppe - ingen IP"
-   "newcastle", "Intel Xeon 3060 2.4 GHz", "2GiB", "2 x 250 GB", "eth0: 192.168.20.12, eth1: oppe - ingen IP"
-   "cardiff", "Intel Xeon 3060 2.4 GHz", "2GiB", "2 x 250 GB", "eth0: 192.168.20.11, eth1: oppe - ingen IP"
-   "kingston", "", "", "12 x 250 GB", "eth0: 192.168.30.20"
+   "dublin", "Intel Xeon 3060 2.4 GHz", "4GiB", "2 x 250 GB", "eth0: 192.168.10.2, eth1: oppe - ingen IP"
+   "manchester", "Intel Xeon 3060 2.4 GHz", "4GiB", "2 x 250 GB", "eth0: 192.168.10.10, eth1: ioppe - ingen IP"
+   "cardiff", "Intel Xeon 3060 2.4 GHz", "2GiB", "2 x 250 GB", "eth0: 192.168.10.11, eth1: oppe - ingen IP"
+	 "newcastle", "Intel Xeon 3060 2.4 GHz", "2GiB", "2 x 250 GB", "eth0: 192.168.10.12, eth1: oppe - ingen IP"
+   "kingston", "Intel Xeon 3060 2.4 GHz", "4GiB", "12 x 250 GB", "bond0: 192.168.10.185, eth0: oppe - link aggregation, eth1: oppe - link aggregation"
 
 I prosjektperioden vil nettverkstopologien være som vist i figuren. Satt i produksjon vil man antageligvis fjerne routeren og DHCP-serveren vi ser øverst i figuren, slik at man benytter seg av offentlige IP’er (globale IP’er delt ut fra HiG). For testformål har vi satt opp vårt eget lokale nettverk bak en dedikert linuxmaskin som kjører NAT og DHCP, slik at vi beskytter testoppsettet fra offentligheten, og unngår å forstyrre noe av HiGs infrastruktur.
 
 
 På switchen er det satt opp ulike VLAN. Standard management-VLAN er flyttet vekk fra VLAN 1, til VLAN 99, i følge beste praksis. VLAN 10 for internettilgang (public), et dedikert VLAN til lagringsnodene (VLAN 30, storage), og i tillegg er det satt opp åtte trunk-porter for trafikk mellom instansene. Det blir opprettet ett nytt VLAN for hvert prosjekt i OpenStack. Dette vil kunne bli et problem dersom man ruller ut i stor skala, siden maks teoretisk antall VLAN er 4096, og av dem igjen er noen reserverte. For vår oppdragsgiver vil nok dette neppe bli noe problem i første omgang, men gitt et scenario der hver student ved skolen skal få tilgang, i tillegg til de emnene som skal bruke systemet, vil dette bli et problem.
 
-Løsningen på dette problemet kan imdlertid være på vei. Sommeren 2011 lanserte# Cisco nyheten VXLAN (Virtual eXtensible LAN). I korte trekk er dette en utvidelese av dagens VLAN-teknologi, der VLAN-ID feltet i pakken er doblet fra dagens 12 bit til 24 bit. Det åpner for et teoretisk maksimum på over 16 millioner (2^24) unike VLAN-ID’er. Et annet skaleringsproblem er utrulling av VLAN til ulike switcher. I dag er VTP# eneste mulighet, men det er ofte deaktivert av sikkerhetshensyn, og man er da tvunget til å konfigurere switchene mer eller mindre manuelt. VXLAN har muligheten for å distribusjon over lag 3 (f.eks IP). Muligheten for å bygge inn støtte for VXLAN i OpenStack er allerede i utviklerenes tanker#, og vil ganske sikkert bli implementert i fremtidige versjoner.
+Løsningen på dette problemet kan imdlertid være på vei. Sommeren 2011 lanserte# Cisco nyheten VXLAN (Virtual eXtensible LAN). I korte trekk er dette en utvidelese av dagens VLAN-teknologi, der VLAN-ID feltet i pakken er doblet fra dagens 12 bit til 24 bit. Det åpner for et teoretisk maksimum på over 16 millioner (2^24) unike VLAN-ID’er. Et annet skaleringsproblem er utrulling av VLAN til ulike switcher. I dag er VTP [#]_ eneste mulighet, men det er ofte deaktivert av sikkerhetshensyn, og man er da tvunget til å konfigurere switchene mer eller mindre manuelt. VXLAN har muligheten for å distribusjon over lag 3 (f.eks IP). Muligheten for å bygge inn støtte for VXLAN i OpenStack er allerede i utviklerenes tanker<ref>, og det er allerede implementert støtte for en Cisco plugin i Quantum. Denne støtter imdlertid ikke VXLAN foreløpig.
 
-Valget av DHCP-server falt på *dnsmasq*. Den har en meget enkel konfigurasjon, samtidig som den uten konfigurasjon over hodet, fungerer som DNS-forwarder for alle DHCP-klienter. Eksempel på konfigurasjon ligger i vedlegg B. For å få det interne nettverket bak routeren til å få kontakt med *dnsmasq* måtte det settes opp et DHCP-relay# i *SkyRoute*. I en cisco-router er slik funksjonalitet innebygget, og gjøres med kommandoen
+Valget av DHCP-server falt på *dnsmasq*. Den har en meget enkel konfigurasjon, samtidig som den uten konfigurasjon over hodet, fungerer som DNS-forwarder for alle DHCP-klienter. Eksempel på konfigurasjon ligger i vedlegg B. For å få det interne nettverket bak routeren til å få kontakt med *dnsmasq* måtte det settes opp et DHCP-relay [#]_ i *SkyRoute*. I en cisco-router er slik funksjonalitet innebygget, og gjøres med kommandoen
 
 ::
   
@@ -1070,17 +1074,15 @@ Konfigurasjonen blir hentet tilbake i oppstarten, ved å legge inn
 
 i oppstartsskriptet */etc/rc.local*.
 
-http://blogs.cisco.com/datacenter/introducing-vxlan/
-
-VLAN Trunking Protocol
-
-http://blogs.cisco.com/openatcisco/integrating-vxlan-in-openstack-quantum/
-
-Tjeneste som lytter etter DHCPREQUEST fra andre nettverk, og videresender de til en gitt IP.
+.. [#] VLAN Trunking Protocol
+.. [#] Tjeneste som lytter etter DHCPREQUEST fra andre nettverk, og videresender de til en gitt IP
 
 
 Nettverk i OpenStack
 *********************
+
+Nettverksmodeller
+.................
 
 Tjenesten nova-network håndterer alle nettverksoppgaver i OpenStack. Det finnes tre forskjellige modeller å velge i mellom:
   - FlatNetworking
@@ -1089,7 +1091,12 @@ Tjenesten nova-network håndterer alle nettverksoppgaver i OpenStack. Det finnes
 
 Uavhengig av hvilken modell man velger, er det mange forskjellige muligheter for infrastruktur i OpenStack. Vi vil ikke gå i dybden på alle disse, men fokusere på den som er gjeldende for vårt oppsett.
 
-Alle våre noder har to nettverkskort. Det ene av disse er satt opp som “public interface” med tilgang til internett. Det andre er satt opp uten IP-adresse. OpenStack setter opp en nettverksbro per prosjekt bundet til dette nettverkskortet, som gir de virtuelle maskinene i samme prosjekt muligheten til å snakke med hverandre. I tillegg sørger nova-network for å legge inn regler i iptables, for å rute trafikk fra instansene til internett via den compute-noden instansen kjører på.
+Alle våre noder har to nettverkskort. På compute nodene er det ene av disse er satt opp som “public interface” med tilgang til internett. Det andre er satt opp uten IP-adresse. På volume noden er de to to nettverkskortene satt opp med aggregering, for å doble den teoretiske båndbredden fra 1 Gbps til 2 Gbps. Dette er fyldig forklart i bacheloroppgaven SkyHigh I/O <ref>. OpenStack setter opp en nettverksbro per prosjekt, bundet til nettverkskortet uten IP-adresse. Broen gir de virtuelle maskinene i samme prosjekt muligheten til å snakke med hverandre. I tillegg sørger nova-network for å legge inn regler i iptables, for å rute trafikk fra instansene til internett via den compute-noden instansen kjører på.
+
+.. figure:: internal_net.png
+   :scale: 300%
+
+   Figur 5: Internt nettverk
 
 **Flat Networking**
 
@@ -1108,6 +1115,38 @@ Denne modellen er standardmodellen, og også den vi har valgt. Her opprettes det
 CloudPipe er en spesiell instans som opptrer som VPN-server. For å få aksess til instansene må man sette opp en slik, og hente ut sertifikat og nøkkel fra denne. Alternativet til dette er å benytte seg av konseptet floating IP. Man definerer en sett IP-adresser, gjerne et helt subnet, med globale IP-adresser man kan legge til instansene. Måten det fungerer på, er at IP-adressen blir lagt til på prosjektets nettverksbro, og det blir opprettet iptables-regler for å rute trafikken til rett instans. Vi har valgt å bruke floating IP i vår implementasjon, med tanke på brukervennlighet. Her trengs det ingen komplisert oppkobling for sluttbrukeren.
 
 Denne modellen passer godt i større implementasjoner, siden den er mest dynamisk. Her trengs ingen manuell konfigurasjon av nettverksbroer eller andre nettverkskort. Alt blir gjort dynamisk. Modellen avhenger av at man har nettverksutstyr som takler IEEE 802.1Q VLAN-tagging.
+
+
+Floating og fixed IP adressering
+................................
+
+OpenStack bruker to konsepter for IP-adressering, fixed IP og floating IP. Alle instanser får en fixed IP fra sitt prosjekts respektive “fixed” nettverk. Hvordan denne deles ut, kommer ann på hvilken av nettverksmodellene man har var. Det subnettet fixed IP bruker, er ikke tilgjengelig utenfor instansene i samme prosjekt, og er følgelig å anse som et internt nett. Compute noden som instansene kjører på vil som tildligerere nevnt få satt opp regler i iptables for å rute trafikk inn og ut mot andre nett.
+
+For å gi instansene en offentlig IP-adresse, må man tilegne den en floating IP. Å gjøre dette er en to stegs prosess. Først må man allokere en adresse fra et definert pool, og deretter må man koble denne adressen til en instans. I konfigurasjonen av nova definerer man et subnet med offentlig adresser man kan allokere floating IP adresser i fra. Dette trenger ikke nødvendigvis å være globalt rutbare adresser, men det må naturligvis være adresser på et nett som er tilgjengelig for brukeren.
+
+Floating IP blir satt opp av nova-network. Det blir satt opp regler i iptables både for filtrering av trafikk og for nat. Itillegg blir adresser fysisk lagt til på det nettverkskortet som er defintert som public interface i novas konfigurasjon.
+
+Her ser vi utdrag fra loggen etter at en floating IP (192.168.10.129) er tilknyttet en instans:
+
+::
+
+	2012-04-24 14:15:06 DEBUG nova.utils [req-0420a717-6545-4a2e-a02e-22837f484250 <user_id> <tenant_id>] 
+	Running cmd (subprocess): sudo ip addr add 192.168.10.129/32 dev eth0 from (pid=13753) execute /usr/lib/python2.7/dist-packages/nova/utils.py:219
+	2012-04-24 14:15:06 DEBUG nova.utils [req-0420a717-6545-4a2e-a02e-22837f484250 <user_id> <tenant_id>] 
+	Running cmd (subprocess): sudo iptables-save -t filter from (pid=13753) execute /usr/lib/python2.7/dist-packages/nova/utils.py:219
+	2012-04-24 14:15:06 DEBUG nova.utils [req-0420a717-6545-4a2e-a02e-22837f484250 <user_id> <tenant_id>] 
+	Running cmd (subprocess): sudo iptables-restore from (pid=13753) execute /usr/lib/python2.7/dist-packages/nova/utils.py:219
+	2012-04-24 14:15:06 DEBUG nova.utils [req-0420a717-6545-4a2e-a02e-22837f484250 <user_id> <tenant_id>] 
+	Running cmd (subprocess): sudo iptables-save -t nat from (pid=13753) execute /usr/lib/python2.7/dist-packages/nova/utils.py:219
+	2012-04-24 14:15:06 DEBUG nova.utils [req-0420a717-6545-4a2e-a02e-22837f484250 <user_id> <tenant_id>] 
+	Running cmd (subprocess): sudo iptables-restore from (pid=13753) execute /usr/lib/python2.7/dist-packages/nova/utils.py:219
+
+Før kallene til iptables, blir reglene generert av novas API. I dette tilfellet, vil følgende regel bli lagt til: 
+
+::
+
+	target     prot opt source               destination         
+	SNAT       all  --  172.16.0.3           anywhere            to:192.168.10.129 
 
 
 Installasjon av OpenStack
@@ -1265,9 +1304,15 @@ Cisco CCNA Exploration 4.0 LAN Switching & Wireless, kap 3 VLANs
 Cisco CCNA Exploration 4.0 LAN Switching & Wireless, kap 6 Inter-VLAN routing
 Cisco CCNA Exploration 4.0 Accessing the WAN, kap 7.1 DHCP  
 ⁴ http://blogs.cisco.com/datacenter/digging-deeper-into-vxlan/ 14.03.12
+http://blogs.cisco.com/datacenter/introducing-vxlan/ 14.03.12
+http://blogs.cisco.com/openatcisco/integrating-vxlan-in-openstack-quantum/ 14.03.12
 http://docs.openstack.org/trunk/openstack-compute/admin/content/ 23.04.12
 http://www.rabbitmq.com/tutorials/amqp-concepts.html 23.04.12
 https://github.com/openstack/nova/tree/master/nova/scheduler 23.04.12
+http://docs.openstack.org/incubation/openstack-network/admin/content/Preface-d1e71.html 24.04.12
+http://wiki.openstack.org/Melange 24.04.12
+http://www.slideshare.net/troytoman/openstack-folsom-summit-melange-overview 24.04.12
+https://blueprints.launchpad.net/nova/+spec/network-refactoring 24.04.12
 
 
 .. raw:: pdf
