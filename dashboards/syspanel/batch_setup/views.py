@@ -69,20 +69,25 @@ class IndexView(tables.MultiTableView):
 	def get_config_overview_data(self):
 		list = []
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor()
+		cursor = db.cursor(MySQLdb.cursors.DictCursor)
 
-		cursor.execute("SELECT id, navn FROM batch")
+		cursor.execute("SELECT c.id, c.name, count(i.id) AS instances FROM configs c, instance_config i WHERE i.config_id = c.id;")
 		data = cursor.fetchall()
-		for row in data :
-                    tenant_list = []
-                    cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%row[0])
-                    tid = cursor.fetchall()
-                    for line in tid :
-                        tenant_list.append(line[0])
-                    list.append(Batch(self.request,str(row[0]),row[1],tenant_list))
-                gc.collect()
+		for row in data:
+			LOG.info("rows in config = : %s"%str(data[1]))
+
  		return list
 
+class Config():
+	id=""
+	name=""
+	instance_count=0
+	def __init__(self,request,id,name,instance_count):
+		self.id = id
+		self.name = name
+		self.instance_count = instance_count
+
+	
 class Batch():
 	id=""
 	name =""
