@@ -22,7 +22,7 @@ from horizon import tables
 from django.http import HttpResponse
 from horizon.dashboards.syspanel.images.tables import AdminImagesTable
 from horizon import api
-from .tables import BatchOverview, InstanceSetup, TenantOverview
+from .tables import BatchOverview, InstanceSetup, TenantOverview, ConfigOverview
 from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch, SaveConfig
 from horizon import forms
 import pprint, MySQLdb, gc
@@ -35,7 +35,7 @@ from datetime import datetime
 LOG = logging.getLogger(__name__)
 
 class IndexView(tables.MultiTableView):
-	table_classes = (BatchOverview, InstanceSetup)
+	table_classes = (BatchOverview, InstanceSetup, ConfigOverview)
 	template_name = 'syspanel/batch_setup/index.html'
 	
 	def get_batch_overview_data(self):
@@ -66,6 +66,10 @@ class IndexView(tables.MultiTableView):
 			self.request.session['cur_instances'] = []
 			
  		return list
+	def get_config_overview_data(self):
+
+		list = []
+		return list
 
 class Batch():
 	id=""

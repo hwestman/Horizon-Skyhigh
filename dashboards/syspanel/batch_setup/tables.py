@@ -96,6 +96,16 @@ class BatchOverview(tables.DataTable):
 		table_actions = (DeleteBatch, )
 		row_actions = (EditBatchLink,DeleteBatch, )
 
+class ConfigOverview(tables.DataTable):
+
+	config_name = tables.Column('name', verbose_name=_("Config"))
+	tenant_count = tables.Column('tenant_count', verbose_name=_("Number of tenants"))
+	instance_count = tables.Column('instance_count', verbose_name=_("Number of instances"))
+
+	class Meta:
+		name = "config_overview"
+		verbose_name = _("Config Overview")
+
 class InstanceSetup(tables.DataTable):
 
 	name = tables.Column('name',verbose_name=_("Name"))
