@@ -26,11 +26,11 @@ class SaveConfig(tables.LinkAction):
 
 class LoadConfig(tables.BatchAction):
     name = "load"
-    #action_present = (_("Pause"), _("Unpause"))
-    #action_past = (_("Paused"), _("Unpaused"))
+    action_present = (_("Load"), _("Unload"))
+    action_past = (_("Loaded"), _("Unloaded"))
     data_type_singular = _("Config")
     data_type_plural = _("Configs")
-    #classes = ("btn-pause")
+    classes = ("btn-pause")
 
     #def allowed(self, request, instance=None):
     #    self.paused = False
