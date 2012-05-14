@@ -71,7 +71,7 @@ class IndexView(tables.MultiTableView):
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
 		cursor = db.cursor(MySQLdb.cursors.DictCursor)
 
-		cursor.execute("SELECT c.name, (SELECT count(*) FROM instance_config i WHERE i.config_id = c.id) AS instances FROM configs c;")
+		cursor.execute("SELECT c.id, c.name, (SELECT count(*) FROM instance_config i WHERE i.config_id = c.id) AS instances FROM configs c;")
 		data = cursor.fetchall()
 		for row in data:
 			list.append(Config(row["id"],row["name"],row["instances"]))
