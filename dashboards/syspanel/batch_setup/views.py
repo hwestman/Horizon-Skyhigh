@@ -67,9 +67,21 @@ class IndexView(tables.MultiTableView):
 			
  		return list
 	def get_config_overview_data(self):
-
 		list = []
-		return list
+		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+		cursor = db.cursor()
+
+		cursor.execute("SELECT id, navn FROM batch")
+		data = cursor.fetchall()
+		for row in data :
+                    tenant_list = []
+                    cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%row[0])
+                    tid = cursor.fetchall()
+                    for line in tid :
+                        tenant_list.append(line[0])
+                    list.append(Batch(self.request,str(row[0]),row[1],tenant_list))
+                gc.collect()
+ 		return list
 
 class Batch():
 	id=""

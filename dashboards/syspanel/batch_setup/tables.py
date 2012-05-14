@@ -24,6 +24,10 @@ class SaveConfig(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:save_config"
     classes = ("ajax-modal", "btn-create")
 
+class DeleteConfig(tables.LinkAction):
+    data_type_singular = _("Config")
+    data_type_plural = _("Configs")
+
 class EditBatchLink(tables.LinkAction):
     name = "edit_batch"
     verbose_name = _("Edit Batch")
@@ -105,6 +109,7 @@ class ConfigOverview(tables.DataTable):
 	class Meta:
 		name = "config_overview"
 		verbose_name = _("Config Overview")
+		row_actions = (DeleteConfig, )
 
 class InstanceSetup(tables.DataTable):
 
