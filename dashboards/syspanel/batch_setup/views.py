@@ -23,7 +23,7 @@ from django.http import HttpResponse
 from horizon.dashboards.syspanel.images.tables import AdminImagesTable
 from horizon import api
 from .tables import BatchOverview, InstanceSetup, TenantOverview
-from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch
+from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch, SaveConfig
 from horizon import forms
 import pprint, MySQLdb, gc
 import logging
@@ -112,18 +112,14 @@ class CreateBatchView(forms.ModalFormView):
                         exceptions.handle(self.request)
 		return context
 
-#class SaveConfigView(forms.ModalFormView):
-#	form_class = SaveConfig
-#	template_name = 'syspanel/batch_setup/save_config.html'
-#
-#        def get_context_data(self, **kwargs):
-#		context = super(SaveBatchView, self).get_context_data(**kwargs)
-#		try:
+class SaveConfigView(forms.ModalFormView):
+	form_class = SaveConfig
+	template_name = 'syspanel/batch_setup/save_config.html'
 
-
-#		except:
-#                       exceptions.handle(self.request)
-#		return context
+        def get_context_data(self, **kwargs):
+		context = super(SaveBatchView, self).get_context_data(**kwargs)
+		
+		return context
 
 
 class EditBatchView(forms.ModalFormView):
