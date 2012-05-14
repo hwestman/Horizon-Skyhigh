@@ -117,7 +117,7 @@ class SaveConfigView(forms.ModalFormView):
 	template_name = 'syspanel/batch_setup/save_config.html'
 
 	def get_context_data(self, **kwargs):
-		context = super(SaveBatchView, self).get_context_data(**kwargs)
+		context = super(SaveConfigView, self).get_context_data(**kwargs)
 		
 		return context
 
