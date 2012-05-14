@@ -27,7 +27,7 @@ class SaveConfig(forms.SelfHandlingForm):
         def save(self, request, data):
             db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
             cursor = db.cursor()
-            cursor.execute("INSERT INTO configs VALUES(%s)" % data['name']) # Store config
+            cursor.execute("INSERT INTO configs VALUES('%s')" % data['name']) # Store config
             cursor.commit()
             cursor.execute("SELECT LAST_INSERT_ID() AS id FROM configs") # Get id of new config
             res = cursor.fetchone()
