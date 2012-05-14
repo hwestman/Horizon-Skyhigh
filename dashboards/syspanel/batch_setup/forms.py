@@ -35,14 +35,20 @@ class SaveConfig(forms.SelfHandlingForm):
             instances = request.session['cur_instances'] # Get instances
             
             for instance in instances:              # Iterate trough every instance
-                cursor.execute("INSERT INTO instance_config(config_id, name, image_id, image_name, flavor_id, flavor_name) \
-                                VALUES(%d, %s, %s, %s, %d, %s)" % (config_id, 
-                                                                   instance.name, 
-                                                                   instance.image_id,
-                                                                   instance.image_name,
-                                                                   int(instance.flavor_id),
-                                                                   instance.flavor_name))
-                db.commit()
+                #cursor.execute("INSERT INTO instance_config(config_id, name, image_id, image_name, flavor_id, flavor_name) \
+                #                VALUES(%d, %s, %s, %s, %d, %s)" % (config_id, 
+                #                                                   instance.name, 
+                #                                                   instance.image_id,
+                #                                                   instance.image_name,
+                #                                                   int(instance.flavor_id),
+                #                                                   instance.flavor_name))
+                #db.commit(
+                LOG.info("%d, %s, %s, %s, %d, %s" % (config_id, 
+                                                       instance.name, 
+                                                       instance.image_id,
+                                                       instance.image_name,
+                                                       int(instance.flavor_id),
+                                                       instance.flavor_name))
             cursor.close()
             db.close()
 
