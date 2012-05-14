@@ -24,6 +24,10 @@ class SaveConfig(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:save_config"
     classes = ("ajax-modal", "btn-create")
 
+class DeleteConfig(tables.DeleteAction):
+    data_type_singular = _("Config")
+    data_type_plural = _("Configs")
+
 class EditBatchLink(tables.LinkAction):
     name = "edit_batch"
     verbose_name = _("Edit Batch")
@@ -95,6 +99,17 @@ class BatchOverview(tables.DataTable):
 		verbose_name = _("Batches")
 		table_actions = (DeleteBatch, )
 		row_actions = (EditBatchLink,DeleteBatch, )
+
+class ConfigOverview(tables.DataTable):
+
+	config_name = tables.Column('name', verbose_name=_("Config"))
+	tenant_count = tables.Column('tenant_count', verbose_name=_("Number of tenants"))
+	instance_count = tables.Column('instance_count', verbose_name=_("Number of instances"))
+
+	class Meta:
+		name = "config_overview"
+		verbose_name = _("Config Overview")
+		row_actions = (DeleteConfig, )
 
 class InstanceSetup(tables.DataTable):
 

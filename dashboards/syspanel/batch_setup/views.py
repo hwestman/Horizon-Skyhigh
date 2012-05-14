@@ -22,7 +22,7 @@ from horizon import tables
 from django.http import HttpResponse
 from horizon.dashboards.syspanel.images.tables import AdminImagesTable
 from horizon import api
-from .tables import BatchOverview, InstanceSetup, TenantOverview
+from .tables import BatchOverview, InstanceSetup, TenantOverview, ConfigOverview
 from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch, SaveConfig
 from horizon import forms
 import pprint, MySQLdb, gc
@@ -35,7 +35,7 @@ from datetime import datetime
 LOG = logging.getLogger(__name__)
 
 class IndexView(tables.MultiTableView):
-	table_classes = (BatchOverview, InstanceSetup)
+	table_classes = (BatchOverview, InstanceSetup, ConfigOverview)
 	template_name = 'syspanel/batch_setup/index.html'
 	
 	def get_batch_overview_data(self):
@@ -65,6 +65,22 @@ class IndexView(tables.MultiTableView):
 		else:
 			self.request.session['cur_instances'] = []
 			
+ 		return list
+	def get_config_overview_data(self):
+		list = []
+		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+		cursor = db.cursor()
+
+		cursor.execute("SELECT id, navn FROM batch")
+		data = cursor.fetchall()
+		for row in data :
+                    tenant_list = []
+                    cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%row[0])
+                    tid = cursor.fetchall()
+                    for line in tid :
+                        tenant_list.append(line[0])
+                    list.append(Batch(self.request,str(row[0]),row[1],tenant_list))
+                gc.collect()
  		return list
 
 class Batch():
