@@ -84,7 +84,7 @@ class Config():
 	id=""
 	name=""
 	instance_count=0
-	def __init__(self,request,id,name,instance_count):
+	def __init__(self,id,name,instance_count):
 		self.id = id
 		self.name = name
 		self.instance_count = instance_count
