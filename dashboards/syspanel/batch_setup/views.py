@@ -116,7 +116,7 @@ class CreateBatchView(forms.ModalFormView):
 class EditBatchView(forms.ModalFormView):
 	form_class = EditBatch
 	template_name = 'syspanel/batch_setup/edit_batch.html'
-
+	context_object_name = 'batch_setup'
 	def get_initial(self):
 		
 		return {'batch_id': self.kwargs['batch_id']}
