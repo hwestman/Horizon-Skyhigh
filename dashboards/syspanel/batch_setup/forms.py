@@ -18,10 +18,32 @@ class SaveConfig(forms.SelfHandlingForm):
 
 
 	def handle(self, request, data):
-		msg = _('was successfully added to configs')
+                self.save(request, data)
+		msg = _('%s was successfully saved to configs' % data['name'])
 		LOG.info(msg)
 		messages.success(request, msg)
 		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
+            
+        def save(self, request, data):
+            db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+            cursor = db.cursor()
+            cursor.execute("INSERT INTO configs VALUES(%s)" % data['name']) # Store config
+            cursor.commit()
+            cursor.execute("SELECT LAST_INSERT_ID() AS id FROM configs") # Get id of new config
+            res = cursor.fetchone()
+            config_id = res[0] 
+            instances = request.session['cur_instances'] # Get instances
+            
+            for instance in instances:              # Iterate trough every instance
+                cursor.execute("INSERT INTO instance_config VALUES(%d, %s, %s, %s, %d, %s)" % (config_id, 
+                                                                                               instance.name, 
+                                                                                               instance.image_id,
+                                                                                               instance.image_name,
+                                                                                               instance.flavor_id,
+                                                                                               instance.flavor_name))
+                cursor.commit()
+            cursor.close()
+            db.close()
 
 class CreateBatch(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("Batch Name"))
