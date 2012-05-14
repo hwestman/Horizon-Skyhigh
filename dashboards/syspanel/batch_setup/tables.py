@@ -28,8 +28,8 @@ class LoadConfig(tables.BatchAction):
     name = "load"
     #action_present = (_("Pause"), _("Unpause"))
     #action_past = (_("Paused"), _("Unpaused"))
-    #data_type_singular = _("Instance")
-    #data_type_plural = _("Instances")
+    data_type_singular = _("Config")
+    data_type_plural = _("Configs")
     #classes = ("btn-pause")
 
     #def allowed(self, request, instance=None):
