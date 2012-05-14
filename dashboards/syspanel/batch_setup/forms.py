@@ -19,9 +19,9 @@ class SaveConfig(forms.SelfHandlingForm):
 
     def handle(self, request, data):
         msg = _('was successfully added to configs')
-		LOG.info(msg)
-		messages.success(request, msg)
-		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
+        LOG.info(msg)
+        messages.success(request, msg)
+        return shortcuts.redirect("horizon:syspanel:batch_setup:index")
 
 class CreateBatch(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("Batch Name"))
