@@ -28,7 +28,7 @@ class SaveConfig(forms.SelfHandlingForm):
             db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
             cursor = db.cursor()
             cursor.execute("INSERT INTO configs(name) VALUES('%s')" % data['name']) # Store config
-            cursor.commit()
+            db.commit()
             cursor.execute("SELECT LAST_INSERT_ID() AS id FROM configs") # Get id of new config
             res = cursor.fetchone()
             config_id = res[0] 
@@ -41,7 +41,7 @@ class SaveConfig(forms.SelfHandlingForm):
                                                                                                instance.image_name,
                                                                                                instance.flavor_id,
                                                                                                instance.flavor_name))
-                cursor.commit()
+                db.commit()
             cursor.close()
             db.close()
 
