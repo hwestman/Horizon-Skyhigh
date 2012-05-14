@@ -24,6 +24,26 @@ class SaveConfig(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:save_config"
     classes = ("ajax-modal", "btn-create")
 
+class LoadConfig(tables.BatchAction):
+    name = "load"
+    #action_present = (_("Pause"), _("Unpause"))
+    #action_past = (_("Paused"), _("Unpaused"))
+    #data_type_singular = _("Instance")
+    #data_type_plural = _("Instances")
+    #classes = ("btn-pause")
+
+    #def allowed(self, request, instance=None):
+    #    self.paused = False
+    #    if not instance:
+    #        return self.paused
+    ##    self.paused = instance.status == "PAUSED"
+     #   if self.paused:
+     #       self.current_present_action = UNPAUSE
+     #   return instance.status in ACTIVE_STATES or self.paused
+
+    def action(self, request, obj_id):
+		LOG.info("from session %s"% obj_id)
+
 class DeleteConfig(tables.DeleteAction):
     data_type_singular = _("Config")
     data_type_plural = _("Configs")
@@ -108,7 +128,7 @@ class ConfigOverview(tables.DataTable):
 	class Meta:
 		name = "config_overview"
 		verbose_name = _("Config Overview")
-		row_actions = (DeleteConfig, )
+		row_actions = (DeleteConfig,LoadConfig, )
 
 class InstanceSetup(tables.DataTable):
 
