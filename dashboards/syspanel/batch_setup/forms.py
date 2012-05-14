@@ -13,6 +13,39 @@ import MySQLdb
 
 LOG = logging.getLogger(__name__)
 
+class SaveConfig(forms.SelfHandlingForm):
+	name = forms.CharField(max_length=80, label=_("Config Name"))
+
+
+	def handle(self, request, data):
+                self.save(request, data)
+		msg = _('%s was successfully saved to configs' % data['name'])
+		LOG.info(msg)
+		messages.success(request, msg)
+		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
+            
+        def save(self, request, data):
+            db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+            cursor = db.cursor()
+            cursor.execute("INSERT INTO configs(name) VALUES('%s')" % data['name']) # Store config
+            db.commit()
+            cursor.execute("SELECT LAST_INSERT_ID() AS id FROM configs") # Get id of new config
+            res = cursor.fetchone()
+            config_id = int(res[0]) 
+            instances = request.session['cur_instances'] # Get instances
+            
+            for instance in instances:              # Iterate trough every instance
+                cursor.execute("INSERT INTO instance_config(config_id, name, image_id, image_name, flavor_id, flavor_name) \
+                                VALUES(%d, '%s', '%s', '%s', %d, '%s')" % (config_id, 
+                                                                   instance.name, 
+                                                                   instance.image_id,
+                                                                   instance.image_name,
+                                                                   int(instance.flavor_id),
+                                                                   instance.flavor_name))
+                db.commit()
+            cursor.close()
+            db.close()
+
 class CreateBatch(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("Batch Name"))
 	tenant_count = forms.IntegerField(label=_("Tenant Count"),

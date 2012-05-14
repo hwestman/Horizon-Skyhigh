@@ -22,8 +22,8 @@ from horizon import tables
 from django.http import HttpResponse
 from horizon.dashboards.syspanel.images.tables import AdminImagesTable
 from horizon import api
-from .tables import BatchOverview, InstanceSetup, TenantOverview
-from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch
+from .tables import BatchOverview, InstanceSetup, TenantOverview, ConfigOverview
+from .forms import CreateBatch, AddInstance, Tmp_Instance, EditBatch, SaveConfig
 from horizon import forms
 import pprint, MySQLdb, gc
 import logging
@@ -35,7 +35,7 @@ from datetime import datetime
 LOG = logging.getLogger(__name__)
 
 class IndexView(tables.MultiTableView):
-	table_classes = (BatchOverview, InstanceSetup)
+	table_classes = (BatchOverview, InstanceSetup, ConfigOverview)
 	template_name = 'syspanel/batch_setup/index.html'
 	
 	def get_batch_overview_data(self):
@@ -66,7 +66,29 @@ class IndexView(tables.MultiTableView):
 			self.request.session['cur_instances'] = []
 			
  		return list
+	def get_config_overview_data(self):
+		list = []
+		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+		cursor = db.cursor(MySQLdb.cursors.DictCursor)
 
+		cursor.execute("SELECT c.id, c.name, (SELECT count(*) FROM instance_config i WHERE i.config_id = c.id) AS instances FROM configs c;")
+		data = cursor.fetchall()
+		for row in data:
+			list.append(Config(str(row["id"]),row["name"],row["instances"]))
+			LOG.info("rows in config = : %s"%row["name"])
+
+ 		return list
+
+class Config():
+	id=""
+	name=""
+	instance_count=0
+	def __init__(self,id,name,instance_count):
+		self.id = id
+		self.name = name
+		self.instance_count = instance_count
+
+	
 class Batch():
 	id=""
 	name =""
@@ -110,7 +132,16 @@ class CreateBatchView(forms.ModalFormView):
                                 
 		except:
                         exceptions.handle(self.request)
-		return context 
+		return context
+
+class SaveConfigView(forms.ModalFormView):
+	form_class = SaveConfig
+	template_name = 'syspanel/batch_setup/save_config.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(SaveConfigView, self).get_context_data(**kwargs)
+		
+		return context
 
 
 class EditBatchView(forms.ModalFormView):
@@ -128,7 +159,7 @@ class EditBatchView(forms.ModalFormView):
 
 		cursor.execute("SELECT * FROM batch where id = %s"%kwargs["batch_id"])
 		data = cursor.fetchone()
-		LOG.info("i logged: %s"%str(data[0]))
+		#LOG.info("i logged: %s"%str(data[1]))
 		cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%data[0])
 
 		tenants = cursor.fetchall()

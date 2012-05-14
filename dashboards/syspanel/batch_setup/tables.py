@@ -1,5 +1,6 @@
 from horizon import api
 from horizon import tables
+from .forms import Tmp_Instance
 import MySQLdb
 import logging
 import os
@@ -17,6 +18,47 @@ class CreateBatchLink(tables.LinkAction):
     verbose_name = _("Create Batch")
     url = "horizon:syspanel:batch_setup:create_batch"
     classes = ("ajax-modal", "btn-create")
+
+class SaveConfig(tables.LinkAction):
+    name = "save_config"
+    verbose_name = _("Save Config")
+    url = "horizon:syspanel:batch_setup:save_config"
+    classes = ("ajax-modal", "btn-create")
+
+class LoadConfig(tables.BatchAction):
+    name = "load"
+    action_present = (_("Load"), _("Unload"))
+    action_past = (_("Loaded"), _("Unloaded"))
+    data_type_singular = _("Config")
+    data_type_plural = _("Configs")
+    classes = ("btn-pause")
+
+    #def allowed(self, request, instance=None):
+    #    self.paused = False
+    #    if not instance:
+    #        return self.paused
+    ##    self.paused = instance.status == "PAUSED"
+     #   if self.paused:
+     #       self.current_present_action = UNPAUSE
+     #   return instance.status in ACTIVE_STATES or self.paused
+
+    def action(self, request, obj_id):
+		LOG.info("from session %s"% obj_id)
+
+		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+		cursor = db.cursor(MySQLdb.cursors.DictCursor)
+		cursor.execute("SELECT * FROM instance_config WHERE config_id='%s'" % obj_id)
+		rows = cursor.fetchall()
+		
+		list = []
+		for data in rows:
+			list.append(Tmp_Instance(str(len(list)+1),data['name'], data['image_id'],data["image_name"],data['flavor_id'],data["flavor_name"]))
+
+		request.session['cur_instances'] = list
+
+class DeleteConfig(tables.DeleteAction):
+    data_type_singular = _("Config")
+    data_type_plural = _("Configs")
 
 class EditBatchLink(tables.LinkAction):
     name = "edit_batch"
@@ -90,6 +132,16 @@ class BatchOverview(tables.DataTable):
 		table_actions = (DeleteBatch, )
 		row_actions = (EditBatchLink,DeleteBatch, )
 
+class ConfigOverview(tables.DataTable):
+	
+	config_name = tables.Column('name', verbose_name=_("Config"))
+	instance_count = tables.Column('instance_count', verbose_name=_("Number of instances"))
+
+	class Meta:
+		name = "config_overview"
+		verbose_name = _("Config Overview")
+		row_actions = (LoadConfig, DeleteConfig, )
+
 class InstanceSetup(tables.DataTable):
 
 	name = tables.Column('name',verbose_name=_("Name"))
@@ -99,7 +151,7 @@ class InstanceSetup(tables.DataTable):
 	class Meta:
 		name = "instance_setup"
 		verbose_name = _("Instance Setup")
-		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance)
+		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance, SaveConfig,)
 		row_actions = (DeleteInstance,)
 
 class TenantOverview(tables.DataTable):

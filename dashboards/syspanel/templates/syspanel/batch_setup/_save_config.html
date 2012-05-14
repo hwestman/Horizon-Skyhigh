@@ -1,0 +1,27 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+
+{% block form_id %}save_config_form{% endblock %}
+{% block form_action %}{% url horizon:syspanel:batch_setup:save_config %}{% endblock %}
+
+{% block modal_id %}create_batch_modal{% endblock %}
+{% block modal-header %}{% trans "Save Config" %}{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <h3>{% trans "Configuration" %}</h3>
+    <fieldset>
+        {% include "horizon/common/_form_fields.html" %}
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Arbitrary" %}</h3>
+	<p>Arbitrary</p>
+     
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Save Config" %}" />
+  <a href="{% url horizon:syspanel:batch_setup:index %}" class="btn secondary cancel close">{% trans "Cancel" %}</a>
+{% endblock %}
