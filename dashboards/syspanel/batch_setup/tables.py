@@ -24,7 +24,7 @@ class SaveConfig(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:save_config"
     classes = ("ajax-modal", "btn-create")
 
-class DeleteConfig(tables.LinkAction):
+class DeleteConfig(tables.DeleteAction):
     data_type_singular = _("Config")
     data_type_plural = _("Configs")
 
