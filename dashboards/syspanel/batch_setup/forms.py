@@ -31,7 +31,7 @@ class SaveConfig(forms.SelfHandlingForm):
             db.commit()
             cursor.execute("SELECT LAST_INSERT_ID() AS id FROM configs") # Get id of new config
             res = cursor.fetchone()
-            config_id = res[0] 
+            config_id = int(res[0]) 
             instances = request.session['cur_instances'] # Get instances
             
             for instance in instances:              # Iterate trough every instance
@@ -41,7 +41,7 @@ class SaveConfig(forms.SelfHandlingForm):
                                                                                                instance.image_name,
                                                                                                instance.flavor_id,
                                                                                                instance.flavor_name))
-                db.commit()
+                d.commit()
             cursor.close()
             db.close()
 
