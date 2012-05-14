@@ -39,9 +39,9 @@ class SaveConfig(forms.SelfHandlingForm):
                                                                                                instance.name, 
                                                                                                instance.image_id,
                                                                                                instance.image_name,
-                                                                                               instance.flavor_id,
+                                                                                               int(instance.flavor_id),
                                                                                                instance.flavor_name))
-                d.commit()
+                db.commit()
             cursor.close()
             db.close()
 
