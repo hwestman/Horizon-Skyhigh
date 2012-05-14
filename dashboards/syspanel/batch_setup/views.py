@@ -128,7 +128,7 @@ class EditBatchView(forms.ModalFormView):
 
 		cursor.execute("SELECT * FROM batch where id = %s"%kwargs["batch_id"])
 		data = cursor.fetchone()
-		LOG.info("i logged: %s"%str(data[0]))
+		#LOG.info("i logged: %s"%str(data[1]))
 		cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%data[0])
 
 		tenants = cursor.fetchall()
