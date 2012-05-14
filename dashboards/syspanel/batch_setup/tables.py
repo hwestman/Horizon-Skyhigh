@@ -80,7 +80,7 @@ class DeleteBatch(tables.DeleteAction):
 
 class BatchOverview(tables.DataTable):
 	
-	batch_name = tables.Column('name', verbose_name=_("Batch"))
+	batch_name = tables.Column('name', verbose_name=_("Batche"))
 	tenant_count = tables.Column('tenant_count', verbose_name=_("Number of tenants"))
 	instance_count = tables.Column('instance_count', verbose_name=_("Number of instances"))
 
