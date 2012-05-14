@@ -18,6 +18,12 @@ class CreateBatchLink(tables.LinkAction):
     url = "horizon:syspanel:batch_setup:create_batch"
     classes = ("ajax-modal", "btn-create")
 
+class SaveConfig(tables.LinkAction):
+    name = "save_config"
+    verbose_name = _("Save Config")
+    url = "horizon:syspanel:batch_setup:save_config"
+    classes = ("ajax-modal", "btn-create")
+
 class EditBatchLink(tables.LinkAction):
     name = "edit_batch"
     verbose_name = _("Edit Batch")
@@ -99,7 +105,7 @@ class InstanceSetup(tables.DataTable):
 	class Meta:
 		name = "instance_setup"
 		verbose_name = _("Instance Setup")
-		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance)
+		table_actions = (AddInstanceLink,CreateBatchLink, DeleteInstance, SaveConfig,)
 		row_actions = (DeleteInstance,)
 
 class TenantOverview(tables.DataTable):

@@ -110,7 +110,20 @@ class CreateBatchView(forms.ModalFormView):
                                 
 		except:
                         exceptions.handle(self.request)
-		return context 
+		return context
+
+#class SaveConfigView(forms.ModalFormView):
+#	form_class = SaveConfig
+#	template_name = 'syspanel/batch_setup/save_config.html'
+#
+#        def get_context_data(self, **kwargs):
+#		context = super(SaveBatchView, self).get_context_data(**kwargs)
+#		try:
+
+
+#		except:
+#                       exceptions.handle(self.request)
+#		return context
 
 
 class EditBatchView(forms.ModalFormView):

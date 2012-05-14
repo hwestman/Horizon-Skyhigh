@@ -24,6 +24,7 @@ from .views import IndexView, CreateBatchView, AddInstanceView, EditBatchView
 urlpatterns = patterns('horizon.dashboards.syspanel.batch_setup.views',
     url(r'^$', IndexView.as_view(), name='index'),
 	url(r'^create_batch/$', CreateBatchView.as_view(), name='create_batch'),
+    url(r'^save_config/$', SaveConfigView.as_view(), name='save_config'),
 	url(r'^add_instance/$', AddInstanceView.as_view(), name='add_instance'),
 	url(r'^(?P<batch_id>[^/]+)/edit_batch/$', EditBatchView.as_view(), name='edit_batch'),)
 
