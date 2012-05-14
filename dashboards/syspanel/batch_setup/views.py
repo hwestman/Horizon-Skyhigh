@@ -74,7 +74,7 @@ class IndexView(tables.MultiTableView):
 		cursor.execute("SELECT c.id, c.name, count(i.id) AS instances FROM configs c, instance_config i WHERE i.config_id = c.id;")
 		data = cursor.fetchall()
 		for row in data:
-			LOG.info("rows in config = : %s"%str(data[1]))
+			LOG.info("rows in config = : %s"%row["name"])
 
  		return list
 
