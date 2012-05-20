@@ -73,7 +73,7 @@ class DeleteConfig(tables.DeleteAction):
 
 	def delete(self, request, obj_id):
 		cursor = Mydb.db.cursor()
-		cursor.execute("DELETE FROM config WHERE id='%s'" % obj_id)
+		cursor.execute("DELETE FROM configs WHERE id='%s'" % obj_id)
 		Mydb.db.commit()
 		cursor.close()
 
