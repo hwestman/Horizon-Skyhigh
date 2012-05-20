@@ -229,7 +229,7 @@ class CreateBatch(forms.SelfHandlingForm):
 
 		cursor.execute("SELECT COUNT(*) FROM batch")
 		data = cursor.fetchone()
-		batchid = int(data[0]+1)
+		batchid = data[0]+1
 		
 		def runCreate(threadName):
 			self.lots_of_tenants(request, data['name'], batchid, data['tenant_count'])
@@ -241,7 +241,7 @@ class CreateBatch(forms.SelfHandlingForm):
 
 
 		LOG.info("batchid %s"% batchid)
-		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, data['name']))
+		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(int(batchid), data['name']))
 		Mydb.db.commit()
 
 		msg = _('%s was successfully added to batches.') % data['name']
