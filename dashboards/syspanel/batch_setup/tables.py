@@ -151,7 +151,7 @@ class BatchOverview(tables.DataTable):
 		name = "batch_overview"
 		verbose_name = _("Batches")
 		table_actions = (DeleteBatch, )
-		row_actions = (EditBatchLink,DeleteBatch, )
+		row_actions = (DeleteBatch, )
 
 class ConfigOverview(tables.DataTable):
 	
