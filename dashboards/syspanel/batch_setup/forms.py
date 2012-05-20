@@ -1,3 +1,18 @@
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+#	Code by: SkyHigh
+#	Bachelor Thesis written at Gjovik University College
+#	http://hovedprosjekter.hig.no/v2012/imt/in/skyhighadm/
+#
+#	This sourcecode has been written as an extension of the Horizon module
+#	in the OpenStack project and is greatly inspired by this.
+#	http://horizon.openstack.org/
+#
+#   Licensed under the Apache License, Version 2.0 (the "License"); you may
+#   not use this file except in compliance with the License. You may obtain
+#   a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+
 import logging
 
 from django import shortcuts
@@ -10,9 +25,19 @@ from horizon.views.auth_forms import Login, LoginWithTenant, _set_session_data
 #from .views import Batch
 import random
 import MySQLdb
+from .TmpInstance import Tmp_Instance
+
 
 LOG = logging.getLogger(__name__)
 
+"""
+Following classes defines and configures the forms used for data input for
+their respective classes.
+
+- Variables represent fields in forms as long as their specified by parent.
+- Handle is selfexplanatory
+- Other methods have been specified to keep with conventions.
+"""
 class SaveConfig(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("Config Name"))
 
@@ -46,6 +71,11 @@ class SaveConfig(forms.SelfHandlingForm):
             cursor.close()
             db.close()
 
+
+"""
+Complex class, see sequence diagram in thesis:https://github.com/hwestman/Horizon-Skyhigh
+
+"""
 class CreateBatch(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("Batch Name"))
 	tenant_count = forms.IntegerField(label=_("Tenant Count"),
@@ -135,15 +165,6 @@ class CreateBatch(forms.SelfHandlingForm):
 		for instance in instances:
 			os.system("/bin/bash /root/scripts/batch/spawn.sh %s %s %s %s %s" % (rcfile, instance.name, instance.flavor_name, instance.image_name, tenant))
 
-	def re_auth(self, request, tenant_id, uname, pw):
-
-		unscoped_token = request.session.get('unscoped_token', None)
-		token = api.token_create_scoped(request, tenant_id, unscoped_token)
-		_set_session_data(request, token)
-
-		l = api.nova.server_list(request)
-		for k in l:
-			LOG.info(k.name)
 
 
 	def lots_of_tenants(self, request, name, amount):
@@ -273,20 +294,4 @@ class EditBatch(forms.SelfHandlingForm):
 		messages.success(request, msg)
 		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
 
-class Tmp_Instance():
-	id = ""
-	name=""
-	flavor = ""
-	image_name = ""
-	image_id = ""
-	flavor_id = ""
-	flavor_name=""
-	def __init__(self,id,instance_name,image_id,image_name,flavor_id,flavor_name):
-
-		self.id = id
-		self.name = instance_name
-		self.image_id = image_id
-		self.image_name = image_name
-		self.flavor_id = flavor_id
-		self.flavor_name = flavor_name
 

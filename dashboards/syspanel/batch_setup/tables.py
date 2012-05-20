@@ -1,3 +1,19 @@
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+
+#	Code by: SkyHigh
+#	Bachelor Thesis written at Gj¿vik University College
+#	http://hovedprosjekter.hig.no/v2012/imt/in/skyhighadm/
+#
+#	This sourcecode has been written as an extension of the Horizon module
+#	in the OpenStack project and is greatly inspired by this.
+#	http://horizon.openstack.org/
+#
+#   Licensed under the Apache License, Version 2.0 (the "License"); you may
+#   not use this file except in compliance with the License. You may obtain
+#   a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+
 from horizon import api
 from horizon import tables
 from .forms import Tmp_Instance
@@ -6,6 +22,10 @@ import logging
 import os
 LOG=logging.getLogger(__name__)
 
+"""
+Following Classes are designed navigation and action links
+Names are self explanatory
+"""
 
 class AddInstanceLink(tables.LinkAction):
     name = "add_instance"
@@ -32,15 +52,6 @@ class LoadConfig(tables.BatchAction):
     data_type_singular = _("Config")
     data_type_plural = _("Configs")
     classes = ("btn-pause")
-
-    #def allowed(self, request, instance=None):
-    #    self.paused = False
-    #    if not instance:
-    #        return self.paused
-    ##    self.paused = instance.status == "PAUSED"
-     #   if self.paused:
-     #       self.current_present_action = UNPAUSE
-     #   return instance.status in ACTIVE_STATES or self.paused
 
     def action(self, request, obj_id):
 		LOG.info("from session %s"% obj_id)
@@ -79,6 +90,11 @@ class DeleteInstance(tables.DeleteAction):
 
 		request.session['cur_instances'] = list
 
+"""
+Extra documentation for this class is required, see the bachelor thesis for
+complete understanding
+https://github.com/hwestman/Horizon-Skyhigh
+"""
 class DeleteBatch(tables.DeleteAction):
     data_type_singular = _("Batch")
     data_type_plural = _("Batches")
@@ -94,7 +110,6 @@ class DeleteBatch(tables.DeleteAction):
 	except:
             LOG.info("Unable to retrive instance list")
 
-	
         for tenant in tenants:				# For every project
             if instances:                               # If there is instnces in the tenant
                 for inst in instances:			# Search every single instance
@@ -118,8 +133,9 @@ class DeleteBatch(tables.DeleteAction):
         db.commit()
         cursor.close()
                                 
-
-
+"""
+Following classes configures their respective tables as views
+"""
 class BatchOverview(tables.DataTable):
 	
 	batch_name = tables.Column('name', verbose_name=_("Batch"))
