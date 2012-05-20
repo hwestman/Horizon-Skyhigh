@@ -18,6 +18,9 @@
 """
 Batch
 """
+
+import MySQLdb
+
 class Batch():
 	id=""
 	name =""
