@@ -27,7 +27,7 @@ from horizon import api, exceptions
 from datetime import datetime
 from .Batch import Batch
 from .Configuration import Config
-from db import Mydb
+from .db import Mydb
 
 LOG = logging.getLogger(__name__)
 
