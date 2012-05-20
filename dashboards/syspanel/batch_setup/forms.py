@@ -26,7 +26,7 @@ from horizon.views.auth_forms import Login, LoginWithTenant, _set_session_data
 import random
 from .db import Mydb
 from .TmpInstance import Tmp_Instance
-
+import thread
 
 LOG = logging.getLogger(__name__)
 
@@ -225,7 +225,15 @@ class CreateBatch(forms.SelfHandlingForm):
 			LOG.info("tenant: %s"% tenant)
 
 	def handle(self, request, data):
-		self.lots_of_tenants(request, data['name'], data['tenant_count'])
+		
+		def runCreate(threadName):
+			self.lots_of_tenants(request, data['name'], data['tenant_count'])
+
+		try:
+			thread.start_new_thread(runCreate,("TheThread",))
+		except:
+			LOG.info("thread couldnt fork")
+
 		msg = _('%s was successfully added to batches.') % data['name']
 		LOG.info(msg)
 		messages.success(request, msg)
