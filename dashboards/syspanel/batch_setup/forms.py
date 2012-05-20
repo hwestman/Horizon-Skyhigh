@@ -164,8 +164,8 @@ class CreateBatch(forms.SelfHandlingForm):
 			os.system("/bin/bash /root/scripts/batch/spawn.sh %s %s %s %s %s" % (rcfile, instance.name, instance.flavor_name, instance.image_name, tenant))
 
 
-
-	def lots_of_tenants(self, request, name, amount):
+#added batchid
+	def lots_of_tenants(self, request, name,batchid, amount):
 
 		tenant_list = []
 
@@ -202,21 +202,21 @@ class CreateBatch(forms.SelfHandlingForm):
 			rcpath = self.save_creds_to_file(request, name, t_name, uname, pw)
 			instances = request.session['cur_instances']
 			self.create_instances(rcpath, instances, t_name)
+		#added batchid
+		self.batch_to_db(request,name,batchid,tenant_list)
 
-		self.batch_to_db(request,name,tenant_list)
-
-
-	def batch_to_db(self,request,name,tenant_list):
+	#added batchid
+	def batch_to_db(self,request,name,batchid,tenant_list):
 
 		cursor = Mydb.db.cursor()
 
-		cursor.execute("SELECT COUNT(*) FROM batch")
-		data = cursor.fetchone()
-		batchid = data[0]+1
+		#cursor.execute("SELECT COUNT(*) FROM batch")
+		#data = cursor.fetchone()
+		#batchid = data[0]+1
 
-		LOG.info("batchid %s"% batchid)
-		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, name))
-		Mydb.db.commit()
+		#LOG.info("batchid %s"% batchid)
+		#cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, name))
+		#Mydb.db.commit()
 
 		for tenant in tenant_list:
 			cursor.execute("INSERT INTO batch_tenants (batch_id,tenant_id) VALUES ('%s','%s')"%(batchid, tenant))
@@ -224,7 +224,18 @@ class CreateBatch(forms.SelfHandlingForm):
 			LOG.info("tenant: %s"% tenant)
 
 	def handle(self, request, data):
-		
+
+		#4 lines
+		cursor = Mydb.db.cursor()
+
+		cursor.execute("SELECT COUNT(*) FROM batch")
+		data = cursor.fetchone()
+		batchid = data[0]+1
+
+		LOG.info("batchid %s"% batchid)
+		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, data['name']))
+		Mydb.db.commit()
+
 		def runCreate(threadName):
 			self.lots_of_tenants(request, data['name'], data['tenant_count'])
 
