@@ -17,9 +17,9 @@
 from horizon import api
 from horizon import tables
 from .forms import Tmp_Instance
-import MySQLdb
 import logging
 import os
+from .db import Mydb
 LOG=logging.getLogger(__name__)
 
 """
@@ -56,8 +56,7 @@ class LoadConfig(tables.BatchAction):
     def action(self, request, obj_id):
 		LOG.info("from session %s"% obj_id)
 
-		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor(MySQLdb.cursors.DictCursor)
+		cursor = Mydb.db.cursor(MySQLdb.cursors.DictCursor)
 		cursor.execute("SELECT * FROM instance_config WHERE config_id='%s'" % obj_id)
 		rows = cursor.fetchall()
 		
@@ -72,8 +71,7 @@ class DeleteConfig(tables.DeleteAction):
 	data_type_plural = _("Configs")
 
 	def delete(self, request, obj_id):
-		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor()
+		cursor = Mydb.db.cursor()
 		cursor.execute("DELETE FROM config WHERE id='%s'" % obj_id)
 		db.commit()
 		cursor.close()
@@ -107,8 +105,7 @@ class DeleteBatch(tables.DeleteAction):
     data_type_plural = _("Batches")
 
     def delete(self, request, obj_id):
-        db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-        cursor = db.cursor()
+        cursor = Mydb.db.cursor()
         cursor.execute( "SELECT tenant_id FROM batch_tenants WHERE batch_id='%s'" % obj_id )
         tenants = cursor.fetchall()
         instances = []
