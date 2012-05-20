@@ -165,7 +165,7 @@ class CreateBatch(forms.SelfHandlingForm):
 
 
 
-	def lots_of_tenants(self, request, name, amount):
+	def lots_of_tenants(self, request, name,batchid, amount):
 
 		tenant_list = []
 
@@ -203,20 +203,20 @@ class CreateBatch(forms.SelfHandlingForm):
 			instances = request.session['cur_instances']
 			self.create_instances(rcpath, instances, t_name)
 
-		self.batch_to_db(request,name,tenant_list)
+		self.batch_to_db(request,name,batchid,tenant_list)
 
 
-	def batch_to_db(self,request,name,tenant_list):
+	def batch_to_db(self,request,name,batchid,tenant_list):
 
 		cursor = Mydb.db.cursor()
 
-		cursor.execute("SELECT COUNT(*) FROM batch")
-		data = cursor.fetchone()
-		batchid = data[0]+1
+		#cursor.execute("SELECT COUNT(*) FROM batch")
+		#data = cursor.fetchone()
+		#batchid = data[0]+1
 
-		LOG.info("batchid %s"% batchid)
-		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, name))
-		Mydb.db.commit()
+		#LOG.info("batchid %s"% batchid)
+		#cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, name))
+		#Mydb.db.commit()
 
 		for tenant in tenant_list:
 			cursor.execute("INSERT INTO batch_tenants (batch_id,tenant_id) VALUES ('%s','%s')"%(batchid, tenant))
@@ -224,14 +224,25 @@ class CreateBatch(forms.SelfHandlingForm):
 			LOG.info("tenant: %s"% tenant)
 
 	def handle(self, request, data):
+
+		cursor = Mydb.db.cursor()
+
+		cursor.execute("SELECT COUNT(*) FROM batch")
+		data = cursor.fetchone()
+		batchid = data[0]+1
 		
 		def runCreate(threadName):
-			self.lots_of_tenants(request, data['name'], data['tenant_count'])
+			self.lots_of_tenants(request, data['name'], batchid, data['tenant_count'])
 
 		try:
 			thread.start_new_thread(runCreate,("TheThread",))
 		except:
 			LOG.info("thread couldnt fork")
+
+
+		LOG.info("batchid %s"% batchid)
+		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, data['name']))
+		Mydb.db.commit()
 
 		msg = _('%s was successfully added to batches.') % data['name']
 		LOG.info(msg)
