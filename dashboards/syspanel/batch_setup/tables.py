@@ -68,16 +68,15 @@ class LoadConfig(tables.BatchAction):
 		request.session['cur_instances'] = list
 
 class DeleteConfig(tables.DeleteAction):
-    data_type_singular = _("Config")
-    data_type_plural = _("Configs")
+	data_type_singular = _("Config")
+	data_type_plural = _("Configs")
 
-    def delete(self, request, obj_id):
+	def delete(self, request, obj_id):
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-        cursor = db.cursor()
-
+		cursor = db.cursor()
 		cursor.execute("DELETE FROM config WHERE id='%s'" % obj_id)
-        db.commit()
-        cursor.close()
+		db.commit()
+		cursor.close()
 
 class EditBatchLink(tables.LinkAction):
     name = "edit_batch"
