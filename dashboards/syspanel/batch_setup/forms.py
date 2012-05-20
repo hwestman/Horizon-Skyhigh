@@ -24,7 +24,7 @@ from horizon import api
 from horizon.views.auth_forms import Login, LoginWithTenant, _set_session_data
 #from .views import Batch
 import random
-import MySQLdb
+from .db import Mydb
 from .TmpInstance import Tmp_Instance
 
 
@@ -50,10 +50,9 @@ class SaveConfig(forms.SelfHandlingForm):
 		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
             
         def save(self, request, data):
-            db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-            cursor = db.cursor()
+            cursor = Mydb.db.cursor()
             cursor.execute("INSERT INTO configs(name) VALUES('%s')" % data['name']) # Store config
-            db.commit()
+            Mydb.db.commit()
             cursor.execute("SELECT LAST_INSERT_ID() AS id FROM configs") # Get id of new config
             res = cursor.fetchone()
             config_id = int(res[0]) 
@@ -67,7 +66,7 @@ class SaveConfig(forms.SelfHandlingForm):
                                                                    instance.image_name,
                                                                    int(instance.flavor_id),
                                                                    instance.flavor_name))
-                db.commit()
+                Mydb.db.commit()
             cursor.close()
             db.close()
 
@@ -210,8 +209,7 @@ class CreateBatch(forms.SelfHandlingForm):
 
 	def batch_to_db(self,request,name,tenant_list):
 
-		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor()
+		cursor = Mydb.db.cursor()
 
 		cursor.execute("SELECT COUNT(*) FROM batch")
 		data = cursor.fetchone()
@@ -219,17 +217,15 @@ class CreateBatch(forms.SelfHandlingForm):
 
 		LOG.info("batchid %s"% batchid)
 		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, name))
-		db.commit()
+		Mydb.db.commit()
 
 		for tenant in tenant_list:
 			cursor.execute("INSERT INTO batch_tenants (batch_id,tenant_id) VALUES ('%s','%s')"%(batchid, tenant))
-			db.commit()
+			Mydb.db.commit()
 			LOG.info("tenant: %s"% tenant)
 
 	def handle(self, request, data):
 		self.lots_of_tenants(request, data['name'], data['tenant_count'])
-		#list=["kari","nils","peter","sara"]
-		#self.batch_to_db(request, data['name'], list)
 		msg = _('%s was successfully added to batches.') % data['name']
 		LOG.info(msg)
 		messages.success(request, msg)

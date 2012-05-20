@@ -20,7 +20,6 @@ from horizon import api
 from .tables import BatchOverview, InstanceSetup, ConfigOverview
 from .forms import CreateBatch, AddInstance, EditBatch, SaveConfig
 from horizon import forms
-import MySQLdb
 import gc
 import logging
 from horizon import api, exceptions
@@ -49,7 +48,6 @@ class IndexView(tables.MultiTableView):
 	"""
 	def get_batch_overview_data(self):
 		list = []
-		#db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
 		cursor = Mydb.db.cursor()
 
 		cursor.execute("SELECT id, navn FROM batch")
@@ -86,8 +84,7 @@ class IndexView(tables.MultiTableView):
 	"""
 	def get_config_overview_data(self):
 		list = []
-		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor(MySQLdb.cursors.DictCursor)
+		cursor = Mydb.db.cursor(MySQLdb.cursors.DictCursor)
 
 		cursor.execute("SELECT c.id, c.name, (SELECT count(*) FROM instance_config i WHERE i.config_id = c.id) AS instances FROM configs c;")
 		data = cursor.fetchall()
@@ -149,8 +146,7 @@ class EditBatchView(forms.ModalFormView):
 
 	def get_object(self, *args, **kwargs):
 
-		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor()
+		cursor = Mydb.db.cursor()
 
 		cursor.execute("SELECT * FROM batch where id = %s"%kwargs["batch_id"])
 		data = cursor.fetchone()
