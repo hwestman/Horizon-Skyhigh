@@ -237,7 +237,7 @@ class CreateBatch(forms.SelfHandlingForm):
 		Mydb.db.commit()
 
 		def runCreate(threadName):
-			self.lots_of_tenants(request, data['name'], data['tenant_count'])
+			self.lots_of_tenants(request, data['name'],batchid, data['tenant_count'])
 
 		try:
 			thread.start_new_thread(runCreate,("TheThread",))
