@@ -27,6 +27,7 @@ from datetime import datetime
 from .Batch import Batch
 from .Configuration import Config
 from .db import Mydb
+import MySQLdb
 
 LOG = logging.getLogger(__name__)
 
