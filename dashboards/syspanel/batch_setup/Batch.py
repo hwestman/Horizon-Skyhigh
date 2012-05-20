@@ -19,7 +19,7 @@
 Batch
 """
 
-from db import Mydb
+import MySQLdb
 
 class Batch():
 	id=""
@@ -36,7 +36,8 @@ class Batch():
 		self.instance_count = self.GetInstances(request)
 
 	def GetInstances(self,request):
-		cursor = Mydb.db.cursor()
+                db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="nova")
+                cursor = db.cursor()
 
 		for t in self.tenant_list :
                         cursor.execute("SELECT COUNT(*) FROM instances WHERE project_id = '%s' AND terminated_at IS NULL AND hostname IS NOT NULL"%t)
