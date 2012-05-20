@@ -19,6 +19,7 @@ from horizon import tables
 from .forms import Tmp_Instance
 import logging
 import os
+import MySQLdb
 from .db import Mydb
 LOG=logging.getLogger(__name__)
 
