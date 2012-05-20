@@ -73,7 +73,7 @@ class DeleteConfig(tables.DeleteAction):
 	def delete(self, request, obj_id):
 		cursor = Mydb.db.cursor()
 		cursor.execute("DELETE FROM config WHERE id='%s'" % obj_id)
-		db.commit()
+		Mydb.db.commit()
 		cursor.close()
 
 class EditBatchLink(tables.LinkAction):
@@ -134,7 +134,7 @@ class DeleteBatch(tables.DeleteAction):
             LOG.info("Deleting tenant %s" % tenant[0])			
             api.keystone.tenant_delete(request, tenant[0])	# Delete tenant
         cursor.execute("DELETE FROM batch WHERE id='%s'" % obj_id)
-        db.commit()
+        Mydb.db.commit()
         cursor.close()
                                 
 """
