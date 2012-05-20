@@ -229,7 +229,7 @@ class CreateBatch(forms.SelfHandlingForm):
 
 		cursor.execute("SELECT COUNT(*) FROM batch")
 		data = cursor.fetchone()
-		batchid = data[0]+1
+		batchid = int(data[0]+1)
 		
 		def runCreate(threadName):
 			self.lots_of_tenants(request, data['name'], batchid, data['tenant_count'])
