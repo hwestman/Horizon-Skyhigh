@@ -68,7 +68,7 @@ class SaveConfig(forms.SelfHandlingForm):
                                                                    instance.flavor_name))
                 Mydb.db.commit()
             cursor.close()
-            db.close()
+            Mydb.db.close()
 
 
 """
