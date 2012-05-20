@@ -241,7 +241,7 @@ class CreateBatch(forms.SelfHandlingForm):
 
 
 		LOG.info("batchid %s"% batchid)
-		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(int(batchid), data['name']))
+		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%d','%s')"%(int(batchid), data['name']))
 		Mydb.db.commit()
 
 		msg = _('%s was successfully added to batches.') % data['name']
