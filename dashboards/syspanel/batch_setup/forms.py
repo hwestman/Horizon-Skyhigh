@@ -233,7 +233,7 @@ class CreateBatch(forms.SelfHandlingForm):
 		batchid = data[0]+1
 
 		LOG.info("batchid %s"% batchid)
-		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, str(data['name']))
+		cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, str(data['name'])))
 		Mydb.db.commit()
 
 		def runCreate(threadName):
