@@ -23,4 +23,4 @@ Database Connection
 import MySQLdb
 
 class Mydb:
-    self.db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+    db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
