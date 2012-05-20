@@ -74,7 +74,6 @@ class DeleteConfig(tables.DeleteAction):
 	def delete(self, request, obj_id):
 		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
 		cursor = db.cursor()
-
 		cursor.execute("DELETE FROM config WHERE id='%s'" % obj_id)
 		db.commit()
 		cursor.close()
