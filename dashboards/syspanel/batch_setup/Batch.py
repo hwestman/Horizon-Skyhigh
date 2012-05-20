@@ -18,7 +18,6 @@
 """
 Batch
 """
-
 import MySQLdb
 
 class Batch():
