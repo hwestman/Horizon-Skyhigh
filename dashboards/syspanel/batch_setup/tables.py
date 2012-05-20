@@ -160,6 +160,7 @@ class ConfigOverview(tables.DataTable):
 	class Meta:
 		name = "config_overview"
 		verbose_name = _("Config Overview")
+		table_actions = (DeleteConfig,)
 		row_actions = (LoadConfig, DeleteConfig, )
 
 class InstanceSetup(tables.DataTable):
