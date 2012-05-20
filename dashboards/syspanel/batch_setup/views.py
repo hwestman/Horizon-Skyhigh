@@ -27,6 +27,7 @@ from horizon import api, exceptions
 from datetime import datetime
 from .Batch import Batch
 from .Configuration import Config
+from db import Mydb
 
 LOG = logging.getLogger(__name__)
 
@@ -48,8 +49,8 @@ class IndexView(tables.MultiTableView):
 	"""
 	def get_batch_overview_data(self):
 		list = []
-		db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
-		cursor = db.cursor()
+		#db = MySQLdb.connect(host="localhost", port=3306, user="root", passwd="melkikakao2012", db="dash")
+		cursor = Mydb.db.cursor()
 
 		cursor.execute("SELECT id, navn FROM batch")
 		data = cursor.fetchall()               
