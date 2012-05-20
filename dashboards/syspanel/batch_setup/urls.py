@@ -1,7 +1,7 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 #	Code by: SkyHigh
-#	Bachelor Thesis written at Gj¿vik University College
+#	Bachelor Thesis written at Gjovik University College
 #	http://hovedprosjekter.hig.no/v2012/imt/in/skyhighadm/
 #
 #	This sourcecode has been written as an extension of the Horizon module
