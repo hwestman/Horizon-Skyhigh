@@ -63,7 +63,8 @@ class LoadConfig(tables.BatchAction):
 		
 		list = []
 		for data in rows:
-			list.append(Tmp_Instance(str(len(list)+1),data['name'], data['image_id'],data["image_name"],data['flavor_id'],data["flavor_name"]))
+			list.append(Tmp_Instance(str(len(list)+1),data['name'],
+			data['image_id'],data["image_name"],data['flavor_id'],data["flavor_name"]))
 
 		request.session['cur_instances'] = list
 

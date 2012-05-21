@@ -55,7 +55,8 @@ class IndexView(tables.MultiTableView):
 		data = cursor.fetchall()               
 		for row in data :
                     tenant_list = []
-                    cursor.execute("SELECT tenant_id FROM batch_tenants WHERE batch_id=%s"%row[0])
+                    cursor.execute("SELECT tenant_id FROM batch_tenants \
+					WHERE batch_id=%s"%row[0])
                     tid = cursor.fetchall()
                     for line in tid :
                         tenant_list.append(line[0])
@@ -87,7 +88,8 @@ class IndexView(tables.MultiTableView):
 		list = []
 		cursor = Mydb.db.cursor(MySQLdb.cursors.DictCursor)
 
-		cursor.execute("SELECT c.id, c.name, (SELECT count(*) FROM instance_config i WHERE i.config_id = c.id) AS instances FROM configs c;")
+		cursor.execute("SELECT c.id, c.name, (SELECT count(*) \
+		FROM instance_config i WHERE i.config_id = c.id) AS instances FROM configs c;")
 		data = cursor.fetchall()
 		for row in data:
 			list.append(Config(str(row["id"]),row["name"],row["instances"]))
@@ -107,7 +109,8 @@ class CreateBatchView(forms.ModalFormView):
         def get_context_data(self, **kwargs):
 		context = super(CreateBatchView, self).get_context_data(**kwargs)
 		try:
-                    usage_list = api.nova.usage_list(self.request, datetime(1970,1,1), datetime.today())
+                    usage_list = api.nova.usage_list(self.request,
+					datetime(1970,1,1), datetime.today())
                     totals = {
                         'vcpus' : 0,
                         'ram' : 0

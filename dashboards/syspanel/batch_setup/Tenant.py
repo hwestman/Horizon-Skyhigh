@@ -19,6 +19,6 @@ Tenats
 """
 class Tenant():
 	id = ""
-	name = "kaare"
+	name = ""
 	def __init__(self,id):
 		self.id = str(id)

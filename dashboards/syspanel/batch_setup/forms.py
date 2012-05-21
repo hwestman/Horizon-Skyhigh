@@ -59,7 +59,8 @@ class SaveConfig(forms.SelfHandlingForm):
             instances = request.session['cur_instances'] # Get instances
             
             for instance in instances:              # Iterate trough every instance
-                cursor.execute("INSERT INTO instance_config(config_id, name, image_id, image_name, flavor_id, flavor_name) \
+                cursor.execute("INSERT INTO instance_config(config_id, name, image_id, \
+								"image_name, flavor_id, flavor_name)
                                 VALUES(%d, '%s', '%s', '%s', %d, '%s')" % (config_id, 
                                                                    instance.name, 
                                                                    instance.image_id,
@@ -150,7 +151,8 @@ class CreateBatch(forms.SelfHandlingForm):
 				  export NOVA_REGION_NAME=$NOVA_REGION\n \
 				  export NOVA_URL=\"http://\${NOVA_API_HOST}:5000/v2.0/\"\n \
 				  export NOVA_VERSION='1.1'\n \
-				  export EC2_URL=\"http://\${NOVA_API_HOST}:8773/services/Cloud\"\n" % (tenant, pw, user)
+				  export EC2_URL=\"http://\${NOVA_API_HOST}:8773/services/Cloud\"\n"
+				  % (tenant, pw, user)
 			f.write(rc)
 			f.close()
 			return path
@@ -161,7 +163,8 @@ class CreateBatch(forms.SelfHandlingForm):
 	def create_instances(self, rcfile, instances, tenant):
 		import os
 		for instance in instances:
-			os.system("/bin/bash /root/scripts/batch/spawn.sh %s %s %s %s %s" % (rcfile, instance.name, instance.flavor_name, instance.image_name, tenant))
+			os.system("/bin/bash /root/scripts/batch/spawn.sh %s %s %s %s %s"
+			% (rcfile, instance.name, instance.flavor_name, instance.image_name, tenant))
 
 
 
@@ -210,16 +213,9 @@ class CreateBatch(forms.SelfHandlingForm):
 
 		cursor = Mydb.db.cursor()
 
-		#cursor.execute("SELECT COUNT(*) FROM batch")
-		#data = cursor.fetchone()
-		#batchid = data[0]+1
-
-		#LOG.info("batchid %s"% batchid)
-		#cursor.execute("INSERT INTO batch (id,navn) VALUES ('%s','%s')"%(batchid, name))
-		#Mydb.db.commit()
-
 		for tenant in tenant_list:
-			cursor.execute("INSERT INTO batch_tenants (batch_id,tenant_id) VALUES ('%s','%s')"%(batchid, tenant))
+			cursor.execute("INSERT INTO batch_tenants (batch_id,tenant_id) \
+			VALUES ('%s','%s')"%(batchid, tenant))
 			Mydb.db.commit()
 			LOG.info("tenant: %s"% tenant)
 
@@ -249,8 +245,6 @@ class CreateBatch(forms.SelfHandlingForm):
 		messages.success(request, msg)
 		return shortcuts.redirect('horizon:syspanel:batch_setup:index')
         
-
-
 class AddInstance(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("Server Name"))
 	image = forms.ChoiceField(label=_("Image"),
@@ -286,7 +280,8 @@ class AddInstance(forms.SelfHandlingForm):
 		flavor_name = api.nova.flavor_get(request, self.data['flavor']).name
 		LOG.info("Here comes the flavor_name %s"%flavor_name)
 		list = request.session['cur_instances']
-		list.append(Tmp_Instance(str(len(list)+1),data['name'], data['image'],image_name,data['flavor'],flavor_name))
+		list.append(Tmp_Instance(str(len(list)+1),data['name'], data['image'],
+		image_name,data['flavor'],flavor_name))
 		request.session['cur_instances'] = list
 
 
@@ -298,8 +293,6 @@ class AddInstance(forms.SelfHandlingForm):
 class EditBatch(forms.SelfHandlingForm):
 	name = forms.CharField(max_length=80, label=_("blabla"))
 
-	#def __init__(self, *args, **kwargs):
-
 
 	def handle(self, request, data):
 
@@ -307,5 +300,3 @@ class EditBatch(forms.SelfHandlingForm):
 		LOG.info(msg)
 		messages.success(request, msg)
 		return shortcuts.redirect("horizon:syspanel:batch_setup:index")
-
-
